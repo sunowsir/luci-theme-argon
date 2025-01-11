@@ -32,11 +32,11 @@
 <div align="center">
 <img src="https://raw.githubusercontent.com/jerrykuku/staff/master/argon_title4.svg">
 
-# A brand new OpenWrt LuCI theme
+# 一个全新的 OpenWrt 主题
 
-Argon is **a clean and tidy OpenWrt LuCI theme** that allows<br/>
-users to customize their login interface with images or videos.  
-It also supports automatic and manual switching between light and dark modes.
+Argon 是**一款干净整洁的 OpenWrt LuCI 主题**，  
+允许用户使用图片或视频自定义其登录界面。  
+它还支持在浅色模式和深色模式之间自动或手动切换。
 
 [![license][license-badge]][license]
 [![prs][prs-badge]][prs]
@@ -45,47 +45,47 @@ It also supports automatic and manual switching between light and dark modes.
 [![download][download-badge]][download]
 [![contact][contact-badge]][contact]
 
-**English** |
-[简体中文][zh-cn-link]
+[English][en-us-link] |
+**简体中文**
 
-[Key Features](#key-features) •
-[Branch](#branch-introduction) •
-[Version History](#version-history) •
-[Getting started](#getting-started) •
-[Screenshots](#screenshots) •
-[Contributors](#contributors) •
-[Credits](#credits)
+[特色](#特色) •
+[分支介绍](#分支介绍) •
+[版本历史](#版本历史) •
+[快速开始](#快速开始) •
+[屏幕截图](#屏幕截图) •
+[贡献者](#贡献者) •
+[鸣谢](#鸣谢)
 
 <img src="https://raw.githubusercontent.com/jerrykuku/staff/master/argon2.gif">
 </div>
 
-## Key Features
+## 特色
 
-- Clean Layout.
-- Adapted to mobile display.
-- Customizable theme colors.
-- Support for using Bing images as login background.
-- Support for custom uploading of images or videos as login background.
-- Automatically switch between light and dark modes with the system, and can also be set to a fixed mode.
-- Settings plugin with extensions [luci-app-argon-config][config-link]
+- 干净整洁的布局。
+- 适配移动端显示。
+- 可自定义主题颜色。
+- 支持使用 Bing 图片作为登录背景。
+- 支持自定义上传图片或视频作为登录背景。
+- 通过系统自动在明暗模式之间切换，也可设置为固定模式。
+- 带有扩展功能的设置插件 [luci-app-argon-config][config-link]
 
-## Branch Introduction
+## 分支介绍
 
-There are currently two main branches that are adapted to different versions of the **OpenWrt** source code.  
-The table below will provide a detailed introduction:
+目前有两个主要的分支，适应于不同版本的**OpenWrt**源代码。  
+下表为详细的介绍：
 
-| Branch | Version | Description                        | Matching source                                           |
-| ------ | ------- | ---------------------------------- | --------------------------------------------------------- |
-| master | v2.x.x  | Support the latest version of LuCI | [Official OpenWrt][official] • [ImmortalWrt][immortalwrt] |
-| 18.06  | v1.x.x  | Support the 18.06 version of LuCI  | [Lean's LEDE][lede]                                         |
+| 分支   | 版本   | 介绍                        | 匹配源码                                              |
+| ------ | ------ | --------------------------- | ----------------------------------------------------- |
+| master | v2.x.x | 支持最新和比较新版本的 LuCI | [官方 OpenWrt][official] • [ImmortalWrt][immortalwrt] |
+| 18.06  | v1.x.x | 支持 18.06 版本的 LuCI      | [Lean's LEDE][lede]                                     |
 
-## Version History
+## 版本历史
 
-The latest version is v2.3.1 [Click here][en-us-release-log] to view the full version history record.
+当前最新的版本为 v2.3.1 [点击这里][zh-cn-release-log]查看完整的版本历史日志.
 
-## Getting started
+## 快速开始
 
-### Build for Lean's LEDE project
+### 使用 Lean's LEDE 构建
 
 ```bash
 cd lede/package/lean
@@ -95,7 +95,7 @@ make menuconfig #choose LUCI->Theme->Luci-theme-argon
 make -j1 V=s
 ```
 
-### Build for OpenWrt official SnapShots and ImmortalWrt
+### 使用官方 OpenWrt SnapShots 和 ImmortalWrt
 
 ```bash
 cd openwrt/package
@@ -104,14 +104,14 @@ make menuconfig #choose LUCI->Theme->Luci-theme-argon
 make -j1 V=s
 ```
 
-### Install for LuCI 18.06 ( Lean's LEDE )
+### 在 18.06 的 LuCI 上安装 ( Lean's LEDE )
 
 ```bash
 wget --no-check-certificate https://github.com/jerrykuku/luci-theme-argon/releases/download/v1.8.2/luci-theme-argon_1.8.2-20230609_all.ipk
 opkg install luci-theme-argon*.ipk
 ```
 
-### Install for OpenWrt official SnapShots and ImmortalWrt
+### 在官方和 ImmortalWrt 上安装
 
 ```bash
 opkg install luci-compat
@@ -120,38 +120,38 @@ wget --no-check-certificate https://github.com/jerrykuku/luci-theme-argon/releas
 opkg install luci-theme-argon*.ipk
 ```
 
-### Install luci-app-argon-config
+### 安装 luci-app-argon-config
 
 ```bash
 wget --no-check-certificate https://github.com/jerrykuku/luci-app-argon-config/releases/download/v0.9/luci-app-argon-config_0.9_all.ipk
 opkg install luci-app-argon-config*.ipk
 ```
 
-## Notice
+## 注意
 
-- Chrome browser is highly recommended. There are some new css3 features used in this theme, currently only Chrome has the best compatibility.
-- Microsoft has officially retired Internet Explorer, RIP IE🙏<del>Currently, the mainline version of the IE series has bugs that need to be addressed.</del>
-- FireFox does not enable the backdrop-filter by default, [see here](https://developer.mozilla.org/zh-CN/docs/Web/CSS/backdrop-filter) for the opening method.
+- 强烈建议使用 Chrome 浏览器。这个主题中使用了一些新的 css3 功能，目前只有 Chrome 浏览器有最好的兼容性。
+- 微软已正式退役 Internet Explorer，安息吧 IE🙏<del>目前，IE 系列的主线版本有需要解决的错误。</del>
+- FireFox 默认不启用 backdrop-filter，[见这里](https://developer.mozilla.org/zh-CN/docs/Web/CSS/backdrop-filter)的打开方法。
 
-## Screenshots
+## 屏幕截图
 
 ![desktop](/Screenshots/screenshot_pc.jpg)
 ![mobile](/Screenshots/screenshot_phone.jpg)
 
-## Contributors
+## 贡献者
 
 <a href="https://github.com/jerrykuku/luci-theme-argon/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=jerrykuku/luci-theme-argon&v=2" />
+  <img src="https://contrib.rocks/image?repo=jerrykuku/luci-theme-argon" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-## Related Projects
+## 相关项目
 
-- [luci-app-argon-config](https://github.com/jerrykuku/luci-app-argon-config): Argon theme config plugin
-- [openwrt-package](https://github.com/jerrykuku/openwrt-package): My OpenWrt package
-- [CasaOS](https://github.com/IceWhaleTech/CasaOS): A simple, easy-to-use, elegant open-source Personal Cloud system (My current main project)
+- [luci-app-argon-config](https://github.com/jerrykuku/luci-app-argon-config): Argon 主题的设置插件
+- [openwrt-package](https://github.com/jerrykuku/openwrt-package): 我的 OpenWrt Package
+- [CasaOS](https://github.com/IceWhaleTech/CasaOS): 一个简单、易用且优雅的开源个人家庭云系统（我目前主要开发的项目）
 
-## Credits
+## 鸣谢
 
 [luci-theme-material](https://github.com/LuttyYang/luci-theme-material/)
