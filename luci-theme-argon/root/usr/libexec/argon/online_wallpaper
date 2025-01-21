@@ -22,10 +22,12 @@ fetch_pic_url() {
         [ -n "${picpath}" ] && echo "//www.bing.com${picpath}"
         ;;
     unsplash)
+        # fix from https://github.com/sbwml/luci-theme-argon
         if [ -z "$API_KEY" ]; then
             curl -fks --max-time $CURL_MAXTIME \
-                "https://source.unsplash.com/1920x1080/daily?wallpapers" |
-                sed -E 's#^.*href="([^?]+)\?.*$#\1?fm=jpg\&fit=crop\&w=1920\&h=1080#'
+                --header "Authorization: Client-ID kmFIroj2ELqXJPtC0XUoyww-Tr_lDU8Ho8uxjptIrCo" \
+                "https://api.unsplash.com/photos/random?count=1&orientation=landscape" |
+                jsonfilter -e "@[0]['urls']['regular']"
         else
             curl -fks --max-time $CURL_MAXTIME \
                 "https://api.unsplash.com/photos/random?client_id=${API_KEY}" |
