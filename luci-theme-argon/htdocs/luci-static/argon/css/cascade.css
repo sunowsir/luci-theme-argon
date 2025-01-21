@@ -1132,7 +1132,7 @@ a.pure-button-selected {
   --header-bg: #09c;
   --header-color: #fff;
   --bar-bg: #5e72e4;
-  --menu-bg-color: #fff;
+  --menu-bg-color: rgba(244, 245, 247, var(--blur-opacity));
   --menu-color: #5f6368;
   --menu-color-hover: #202124;
   --main-menu-color: #202124;
