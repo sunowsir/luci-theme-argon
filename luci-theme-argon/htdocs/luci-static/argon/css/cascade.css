@@ -1240,6 +1240,8 @@ li {
 }
 .tr {
   display: table-row;
+  backdrop-filter: blur(var(--blur-radius));
+  background-color: var(--menu-bg-color);
 }
 .thead {
   display: table-header-group;
@@ -1405,6 +1407,8 @@ hr {
 }
 ul {
   line-height: normal;
+  backdrop-filter: blur(var(--blur-radius));
+  background-color: var(--menu-bg-color);
 }
 li {
   list-style-type: none;
@@ -1449,6 +1453,8 @@ h4 {
   font-weight: 600;
   color: #525f7f;
   font-weight: bold;
+  backdrop-filter: blur(var(--blur-radius));
+  background-color: var(--menu-bg-color);
 }
 h4 em {
   padding: 0 0.5rem;
