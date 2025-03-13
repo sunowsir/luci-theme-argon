@@ -161,8 +161,6 @@ li {
 
 .tr {
   display: table-row;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 
 .thead {
@@ -364,8 +362,6 @@ hr {
 
 ul {
   line-height: normal;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 
 li {
@@ -405,10 +401,6 @@ h3 {
   color: var(--gray-dark);
   border-radius: .25rem .25rem 0 0;
   font-weight: bold;
-
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
-
 }
 
 h4 {
@@ -418,9 +410,6 @@ h4 {
   font-weight: 600;
   color: #525f7f;
   font-weight: bold;
-
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 
   em {
     padding: 0 0.5rem;
@@ -810,6 +799,9 @@ small {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+
+  backdrop-filter: blur(var(--blur-radius));
+  background-color: var(--menu-bg-color);
 
   & > #maincontent {
     position: relative;
@@ -1440,9 +1432,6 @@ body[class*="node-"] > .main > .main-left > .nav > .slide > .menu.active::before
   border-radius: 0.25rem;
   box-shadow: 0 0 1rem 0 rgba(136, 152, 170, .15);
 
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
-
   &:last-child {
     margin: 0 0 1rem 0;
     border: 0;
@@ -1639,10 +1628,6 @@ tr > th,
 .cbi-section-table-row {
   margin-bottom: 1rem;
   text-align: center !important;
-
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
-
 }
 
 .cbi-section-table-row:last-child {
@@ -1701,8 +1686,6 @@ tr > th,
 
 div > table > tbody > tr:nth-of-type(2n),
 div > .table > .tr:nth-of-type(2n) {
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 
 /* fix multiple table */
@@ -2015,9 +1998,6 @@ td > table > tbody > tr > td,
   padding: 0.5rem 1rem 0 1rem;
   white-space: nowrap;
   overflow-x: auto;
-
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 
   &::-webkit-scrollbar {
     width: 1px;
@@ -3058,8 +3038,8 @@ td > .ifacebadge,
   color: #242424;
   border: 0;
   border-radius: 0.25rem;
-  background-color: #ffffff;
-
+  backdrop-filter: blur(var(--blur-radius));
+  background-color: var(--menu-bg-color);
 }
 
 #syslog:focus {
@@ -4679,6 +4659,5 @@ pre.command-output {
   border: 1px solid rgba(0, 0, 0, .05);
   border-radius: .375rem;
   box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
-  background-color: #fff;
 }
 
