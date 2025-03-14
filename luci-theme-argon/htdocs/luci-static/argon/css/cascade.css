@@ -2335,8 +2335,6 @@ body[class*="node-"] > .main > .main-left > .nav > .slide > .menu.active::before
   font-size: small;
   line-height: 1.5;
   padding: 0rem 1rem;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 .cbi-map-descr + fieldset {
   margin-top: 1rem;
@@ -2377,8 +2375,7 @@ fieldset > fieldset,
 }
 .cbi-section p {
   padding: 1rem;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
+  border-radius: 0.25rem;
 }
 .cbi-tblsection {
   overflow-x: auto;
@@ -2392,10 +2389,6 @@ table,
   overflow-y: hidden;
   width: 100%;
   font-size: 90%;
-}
-.table .table-titles th {
-  background-color: #e9ecef;
-  background-color: var(--lighter);
 }
 table > tbody > tr > td,
 table > tbody > tr > th,
@@ -2436,7 +2429,6 @@ tr > th,
 .tr.table-titles > .th,
 .tr.cbi-section-table-titles > .th {
   border-top: 0 !important;
-  background-color: #f6f9fc;
   padding: 1.1em 1.25rem;
   line-height: 1.3rem;
 }
@@ -2773,8 +2765,11 @@ td > table > tbody > tr > td,
 .cbi-tabmenu {
   color: white;
   padding: 0.5rem 1rem 0 1rem;
+  border-radius: 0.25rem;
   white-space: nowrap;
   overflow-x: auto;
+  backdrop-filter: blur(var(--blur-radius));
+  background-color: var(--menu-bg-color);
 }
 .cbi-tabmenu::-webkit-scrollbar {
   width: 1px;
@@ -2830,8 +2825,6 @@ td > table > tbody > tr > td,
 }
 .cbi-section-node {
   padding: 0;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 .cbi-section .cbi-section-remove:nth-of-type(2n),
 .container > .cbi-section .cbi-section-node:nth-of-type(2n) {
@@ -2864,12 +2857,6 @@ td > table > tbody > tr > td,
   padding: 0;
   border: 0 solid #d4d4d4;
   border-radius: 0.25rem;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
-}
-.cbi-tabcontainer > .cbi-value:nth-of-type(2n) {
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 .cbi-value-field {
   display: table-cell;
@@ -3540,7 +3527,8 @@ body.modal-overlay-active #modal_overlay {
   align-items: center;
   gap: 0.2rem;
   padding: 0.25rem 0.8rem;
-  background: #eee;
+  backdrop-filter: blur(var(--blur-radius));
+  background-color: var(--menu-bg-color);
   border-radius: 4px;
 }
 td > .ifacebadge,
@@ -3565,8 +3553,6 @@ td > .ifacebadge,
   border-radius: 0.25rem;
   overflow: hidden;
   margin: 1rem;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 .network-status-table .ifacebox-body {
   display: flex;
@@ -3574,7 +3560,6 @@ td > .ifacebadge,
   height: 100%;
   gap: 0.5em;
   backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 .network-status-table .ifacebox-body > span {
   flex: 10 10 auto;
@@ -3759,8 +3744,6 @@ td > .ifacebadge,
   flex-direction: column;
   border-radius: 4px;
   min-width: 100px;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 .ifacebox-head {
   padding: 0.25em;
@@ -3952,7 +3935,6 @@ label[data-index][data-depends] {
 [data-page="admin-network-diagnostics"] .cbi-section {
   padding: 1rem;
   font-family: monospace;
-  background: #fff !important;
 }
 [data-page="admin-network-diagnostics"] textarea {
   background: transparent;
@@ -3963,7 +3945,6 @@ label[data-index][data-depends] {
   padding: 0.5rem;
 }
 [data-page="admin-network-diagnostics"] .tr > .td {
-  background-color: #fff !important;
   border-bottom: 1px solid #dee2e6 !important;
 }
 input[name="ping"],
@@ -4148,9 +4129,7 @@ div[style*="display:grid;grid-template-columns:repeat"] .ifacebox .ifacebox-body
   padding: 1rem;
   resize: none;
   background-color: transparent;
-  background: var(--white);
   outline: none;
-  color: #8898aa;
   border-radius: 0.25rem;
   border: 1px solid #dee2e6;
 }
