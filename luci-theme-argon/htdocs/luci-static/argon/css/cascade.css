@@ -1361,8 +1361,6 @@ input,
   background-image: none;
   box-shadow: none;
   transition: box-shadow 0.15s ease;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
 }
 select,
 .cbi-dropdown {
@@ -2903,6 +2901,7 @@ td > table > tbody > tr > td,
 .cbi-value input[type="password"],
 .cbi-value textarea {
   min-width: 18rem;
+  max-width: 18rem;
 }
 .cbi-value input[type="password"] {
   border-bottom-right-radius: 0;
@@ -3242,7 +3241,7 @@ td > table > tbody > tr > td,
   height: 20px;
 }
 .cbi-dropdown[open] > ul.dropdown {
-  position: absolute;
+  position: bottom;
   z-index: 1100;
   display: block;
   width: auto;
@@ -3257,6 +3256,7 @@ td > table > tbody > tr > td,
   color: var(--main-menu-color);
   margin-left: 0 !important;
   left: 0;
+  box-sizing: border-box;
 }
 .cbi-dropdown[open] > ul.dropdown li {
   color: #000;
