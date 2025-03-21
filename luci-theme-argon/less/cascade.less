@@ -2650,11 +2650,17 @@ body:not(.Interfaces) .cbi-rowstyle-2:first-child {
 
 .cbi-dropdown[open] > ul.dropdown > li[selected] {
   background: #e4e9ee;
+
+  overflow-x: auto; /* 横向滚动 */
+  overflow-y: auto; /* 纵向滚动 */
 }
 
 .cbi-dropdown[open] > ul.dropdown > li.focus {
   background: #e4e9ee;
   outline: none;
+
+  overflow-x: auto; /* 横向滚动 */
+  overflow-y: auto; /* 纵向滚动 */
 }
 
 .cbi-dropdown[open] > ul.dropdown > li:last-child {
