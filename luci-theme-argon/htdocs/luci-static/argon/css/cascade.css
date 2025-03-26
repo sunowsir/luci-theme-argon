@@ -7,7 +7,7 @@
  *  Have a bug? Please create an issue here on GitHub!
  *      https://github.com/jerrykuku/luci-theme-argon/issues
  *
- *  luci-theme-material: 
+ *  luci-theme-material:
  *      Copyright 2015 Lutty Yang <lutty@wcan.in>
  *      https://github.com/LuttyYang/luci-theme-material/
  *
@@ -1923,6 +1923,7 @@ div[style="width:100%;height:300px;border:1px solid #000;background:#fff"] {
 }
 .notice {
   background-color: #11cdef !important;
+  background-color: var(--primary) !important;
   color: #fff;
 }
 .error {
@@ -2438,6 +2439,16 @@ tr > th,
 }
 [data-page="admin-network-network"] .td > .ifacebadge > .cbi-tooltip-container img {
   vertical-align: middle;
+}
+[data-page="admin-network-network"] div[data-name="_gen_server_keypair"] .cbi-value-title,
+[data-page="admin-network-network"] div[data-name="_gen_peer_keypair"] .cbi-value-title,
+[data-page="admin-network-network"] div[data-name="_gen_psk"] .cbi-value-title {
+  height: 2.4rem;
+}
+[data-page="admin-network-network"] #modal_overlay > .modal.cbi-modal > div > p > textarea {
+  height: 20em!important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 4px;
 }
 #cbi-network .tr:first-child > .td {
   border-top: 0;
@@ -3850,7 +3861,7 @@ span[data-tooltip] .label {
   background: #fff;
   box-shadow: 0 0 2px #444;
 }
-.cbi-tooltip-container:hover .cbi-tooltip {
+.cbi-tooltip-container:hover .cbi-tooltip:not(:empty) {
   left: auto;
   transition: opacity 0.25s ease-in;
   opacity: 1;
@@ -4446,6 +4457,17 @@ pre.command-output {
 [data-page^="admin-services-openclash"] select#CORE_VERSION,
 [data-page^="admin-services-openclash"] select#RELEASE_BRANCH {
   width: auto;
+}
+[data-page="admin-services-npc"] div[id="cbid.npc.config.vkey"] {
+  white-space: normal;
+}
+[data-page="admin-services-npc"] div[id="cbid.npc.config.vkey"] input[id="widget.cbid.npc.config.vkey"][type="password"] {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+[data-page="admin-services-npc"] div[id="cbid.npc.config.vkey"] .cbi-button {
+  margin: 0;
+  border: none;
 }
 /* IE hacks */
 @media all and (-ms-high-contrast: none) {
