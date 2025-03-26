@@ -1,8 +1,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-argon-config
-PKG_VERSION:=2023.06.08
-PKG_RELEASE:=1
+PKG_VERSION:=1.0
+PKG_RELEASE:=20230608
 
 PKG_MAINTAINER:=jerrykuku <jerrykuku@qq.com>
 
