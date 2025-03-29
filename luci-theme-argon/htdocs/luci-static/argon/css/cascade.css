@@ -3766,7 +3766,6 @@ td > .ifacebadge,
 }
 .ifacebox-head {
   padding: 0.25em;
-  background: #eee;
 }
 .ifacebox-head.active {
   background: #5e72e4;
