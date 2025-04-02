@@ -1164,7 +1164,7 @@ a.pure-button-selected {
   --white: #fff;
   --neutral: #fff;
   --darker: black;
-  --background-color: #f4f5f7;
+  --background-color: rgba(244, 245, 247, var(--blur-opacity));
   --login-form-bg-color: rgba(244, 245, 247, 0.8);
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
@@ -1199,7 +1199,6 @@ html {
 }
 body {
   font-size: 0.875rem;
-  background-color: #f4f5f7;
   background-color: var(--background-color);
   color: #32325d;
   color: var(--gray-dark);
@@ -1344,7 +1343,7 @@ select {
   padding: 0.36rem 0.8rem;
   color: #555;
   border: thin solid #ccc;
-  background-color: #fff;
+  background-color: var(--background-color);
   background-image: none;
 }
 .btn,
@@ -1354,13 +1353,14 @@ input,
 .cbi-dropdown {
   line-height: 1.5em;
   padding: 0.5rem 0.75rem;
-  color: #8898aa;
+  color: black;
   border: 1px solid #dee2e6;
   border-radius: 0.25rem;
   outline: 0;
   background-image: none;
   box-shadow: none;
   transition: box-shadow 0.15s ease;
+  background-color: transparent;
 }
 select,
 .cbi-dropdown {
@@ -1386,7 +1386,7 @@ code {
   padding: 1px 3px;
   color: #101010;
   border-radius: 2px;
-  background: #ddd;
+  background: var(--background-color);
   font-family: inherit;
   font-size: inherit;
 }
@@ -1419,7 +1419,7 @@ h2 {
   padding: 1rem 1.25rem;
   color: #32325d;
   border-radius: 0.25rem;
-  background: #fff;
+  background: var(--background-color);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
   font-weight: bold;
   backdrop-filter: blur(var(--blur-radius));
@@ -1542,11 +1542,9 @@ h5 {
   width: 100%;
   min-height: 100%;
   max-width: 420px;
-  background-color: #fff;
-  background-color: var(--white);
   -webkit-backdrop-filter: blur(var(--blur-radius));
   backdrop-filter: blur(var(--blur-radius));
-  background-color: rgba(244, 245, 247, var(--blur-opacity));
+  background-color: var(--background-color);
 }
 .login-page .login-container .login-form .brand {
   display: flex;
@@ -1765,10 +1763,10 @@ small {
   height: 1px;
 }
 .main-left::-webkit-scrollbar-thumb {
-  background-color: #f6f9fc;
+  background-color: var(--background-color);
 }
 .main-left::-webkit-scrollbar-track {
-  background-color: #fff;
+  background-color: var(--background-color);
 }
 .main-right {
   flex-grow: 1;
@@ -1806,7 +1804,7 @@ small {
   border-top: 1px solid #000000;
 }
 .main-right > #maincontent .Dashboard .dashboard-bg {
-  background-color: #fff;
+  background-color: var(--background-color);
 }
 .main-right > #maincontent .Dashboard .settings-info {
   padding-top: 1em;
@@ -1938,7 +1936,7 @@ div[style="width:100%;height:300px;border:1px solid #000;background:#fff"] {
   padding: 1rem 1.25rem;
   border: 0;
   border-radius: 0.25rem !important;
-  background-color: #fff;
+  background-color: var(--background-color);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.12);
   text-shadow: none;
 }
@@ -2446,7 +2444,7 @@ tr > th,
   height: 2.4rem;
 }
 [data-page="admin-network-network"] #modal_overlay > .modal.cbi-modal > div > p > textarea {
-  height: 20em!important;
+  height: 20em !important;
   border: 1px solid #dee2e6 !important;
   border-radius: 4px;
 }
@@ -2535,7 +2533,7 @@ td > table > tbody > tr > td,
   text-decoration: none;
   border: 0;
   border-radius: 0.25rem;
-  background-color: #f0f0f0;
+  background-color: var(--background-color);
   background-image: none;
   appearance: none;
   -ms-touch-action: manipulation;
@@ -2720,7 +2718,7 @@ td > table > tbody > tr > td,
 .tabs {
   margin: 0 0 1rem 0;
   padding: 0 1rem;
-  background-color: #FFFFFF;
+  background-color: var(--background-color);
   border-radius: 0.25rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
   white-space: nowrap;
@@ -2733,10 +2731,10 @@ td > table > tbody > tr > td,
   height: 5px;
 }
 .tabs::-webkit-scrollbar-thumb {
-  background-color: #f6f9fc;
+  background-color: var(--background-color);
 }
 .tabs::-webkit-scrollbar-track {
-  background-color: #fff;
+  background-color: var(--background-color);
 }
 .tabs li[class~="active"],
 .tabs li:hover {
@@ -2785,10 +2783,10 @@ td > table > tbody > tr > td,
   height: 5px;
 }
 .cbi-tabmenu::-webkit-scrollbar-thumb {
-  background-color: #f6f9fc;
+  background-color: var(--background-color);
 }
 .cbi-tabmenu::-webkit-scrollbar-track {
-  background-color: #fff;
+  background-color: var(--background-color);
 }
 .cbi-tabmenu li {
   background: #dce3e9;
@@ -2837,7 +2835,7 @@ td > table > tbody > tr > td,
 }
 .cbi-section .cbi-section-remove:nth-of-type(2n),
 .container > .cbi-section .cbi-section-node:nth-of-type(2n) {
-  background-color: #f9f9f9;
+  background-color: var(--background-color);
 }
 [data-tab-title] {
   overflow: hidden;
@@ -2859,7 +2857,7 @@ td > table > tbody > tr > td,
 }
 .cbi-section[id] .cbi-section-remove:nth-of-type(4n+3),
 .cbi-section[id] .cbi-section-node:nth-of-type(4n+4) {
-  background-color: #f9f9f9;
+  background-color: var(--background-color);
 }
 .cbi-section-node-tabbed {
   margin-top: 0;
@@ -2912,7 +2910,6 @@ td > table > tbody > tr > td,
 .cbi-value input[type="password"],
 .cbi-value textarea {
   min-width: 18rem;
-  max-width: 18rem;
 }
 .cbi-value input[type="password"] {
   border-bottom-right-radius: 0;
@@ -3166,6 +3163,7 @@ td > table > tbody > tr > td,
   padding: 0;
   list-style: none;
   outline: 0;
+  color: black;
 }
 .cbi-dropdown > ul.preview {
   display: none;
@@ -3260,7 +3258,7 @@ td > table > tbody > tr > td,
   max-width: none;
   max-height: 200px !important;
   border: 0 solid #918e8c;
-  background: #ffffff;
+  background-color: var(--background-color);
   box-shadow: 0 0 4px #918e8c;
   border-bottom-left-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
@@ -3391,7 +3389,7 @@ td > table > tbody > tr > td,
   margin: 5em auto;
   padding: 1rem;
   border-radius: 0.25rem !important;
-  background: #fff;
+  background: var(--background-color);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.12);
 }
 .modal > * {
@@ -3496,7 +3494,7 @@ body.modal-overlay-active #modal_overlay {
   transform: translateX(-50%) translateY(-50%);
   padding: 1rem;
   border-radius: 0.5rem;
-  background: #ffffff;
+  background: var(--background-color);
   box-shadow: 0 0 1rem 0 rgba(136, 152, 170, 0.15);
 }
 /* luci */
@@ -3553,7 +3551,7 @@ body.modal-overlay-active #modal_overlay {
 td > .ifacebadge,
 .td > .ifacebadge {
   font-size: 0.875rem;
-  background-color: #f0f0f0;
+  background-color: var(--background-color);
 }
 .ifacebadge > em,
 .ifacebadge > img {
@@ -3607,10 +3605,11 @@ td > .ifacebadge,
   font-size: 0.875rem;
   min-height: 14rem;
   padding: 0.8rem;
-  color: #8898aa;
+  color: black;
   border-radius: 0.25rem;
   border: 1px solid #dee2e6;
   min-width: 16rem;
+  background-color: transparent;
 }
 #content_syslog {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
@@ -3624,11 +3623,10 @@ td > .ifacebadge,
   min-height: 15rem;
   padding: 1rem;
   resize: none;
-  color: #242424;
+  color: black;
   border: 0;
   border-radius: 0.25rem;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
+  background-color: transparent;
 }
 #syslog:focus {
   outline: 0;
@@ -3666,7 +3664,7 @@ td > .ifacebadge,
   padding: 2px;
   text-decoration: none;
   border: thin solid #ccc;
-  background-color: #eee;
+  background-color: var(--background-color);
 }
 .uci-change-list var ins,
 .uci-change-list var del {
@@ -3815,7 +3813,7 @@ td > .ifacebadge,
 .cbi-value-field > ul > li .ifacebadge {
   margin-top: -0.5rem;
   margin-left: 0.4rem;
-  background-color: #eee;
+  background-color: var(--background-color);
 }
 .cbi-section-table-row > .cbi-value-field .cbi-dropdown {
   min-width: 3rem;
@@ -3857,7 +3855,7 @@ span[data-tooltip] .label {
   pointer-events: none;
   opacity: 0;
   border-radius: 3px;
-  background: #fff;
+  background: var(--background-color);
   box-shadow: 0 0 2px #444;
 }
 .cbi-tooltip-container:hover .cbi-tooltip:not(:empty) {
@@ -4450,7 +4448,7 @@ pre.command-output {
 [data-page^="admin-services-openclash"] .cbi-button-up,
 [data-page^="admin-services-openclash"] .cbi-button-down {
   padding: 0.8rem 1.5rem;
-  background-color: #f1f1f1;
+  background-color: var(--background-color);
   font-size: 0;
 }
 [data-page^="admin-services-openclash"] select#CORE_VERSION,
@@ -4835,7 +4833,7 @@ pre.command-output {
     margin: 5em auto;
     padding: 1em;
     border-radius: 3px !important;
-    background: #fff;
+    background: var(--background-color);
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.12);
   }
   .cbi-dropdown[open] > ul.dropdown {
