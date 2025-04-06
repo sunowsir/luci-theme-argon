@@ -3435,7 +3435,7 @@ td > table > tbody > tr > td,
 }
 .modal ul li {
   list-style-type: square;
-  color: #808080;
+  color: black;
 }
 .modal p {
   word-break: break-word;
