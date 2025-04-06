@@ -6,3 +6,4 @@
 * 仓库引用：详情看https://github.com/sunowsir/feeds.conf.default
 * 截图：
     ![screenshot](./screenshot.png)
+    ![screenshot](./screenshot1.png)
