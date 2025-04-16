@@ -1218,7 +1218,7 @@ textarea:focus-visible {
   color: var(--white);
 }
 ::placeholder {
-  color: var(--lighter);
+  color: var(--gray);
 }
 a:link,
 a:visited,
