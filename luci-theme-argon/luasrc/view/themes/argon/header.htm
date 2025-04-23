@@ -1,170 +1,172 @@
 <%#
-	Argon is a clean HTML5 theme for LuCI. It is based on luci-theme-material Argon Template
+    Argon is a clean HTML5 theme for LuCI. It is based on luci-theme-material Argon Template
 
-	luci-theme-argon
-	Copyright 2020 Jerrykuku <jerrykuku@qq.com>
+    luci-theme-argon
+    Copyright 2020 Jerrykuku <jerrykuku@qq.com>
 
-	Have a bug? Please create an issue here on GitHub!
-	https://github.com/jerrykuku/luci-theme-argon/issues
+    Have a bug? Please create an issue here on GitHub!
+    https://github.com/jerrykuku/luci-theme-argon/issues
 
-	luci-theme-material:
-	Copyright 2015 Lutty Yang <lutty@wcan.in>
+    luci-theme-material:
+    Copyright 2015 Lutty Yang <lutty@wcan.in>
 
-	Argon Theme
-	https://demos.creative-tim.com/argon-dashboard/index.html
+    Argon Theme
+    https://demos.creative-tim.com/argon-dashboard/index.html
 
-	Licensed to the public under the Apache License 2.0
+    Licensed to the public under the Apache License 2.0
 -%>
 
 <%
-	local util		= require "luci.util"
-	local fs		= require "nixio.fs"
-	local nutil		= require "nixio.util"
-	local json		= require "luci.jsonc"
-	local sys		= require "luci.sys"
-	local uci		= require 'luci.model.uci'.cursor()
+    local util        = require "luci.util"
+    local fs        = require "nixio.fs"
+    local nutil        = require "nixio.util"
+    local json        = require "luci.jsonc"
+    local sys        = require "luci.sys"
+    local uci        = require 'luci.model.uci'.cursor()
 
-	-- Fetch Local Background Media
+    -- Fetch Local Background Media
 
-	local function glob(...)
-		local iter, code, msg = fs.glob(...)
-		if iter then
-			return nutil.consume(iter)
-		else
-			return nil, code, msg
-		end
-	end
+    local function glob(...)
+        local iter, code, msg = fs.glob(...)
+        if iter then
+            return nutil.consume(iter)
+        else
+            return nil, code, msg
+        end
+    end
 
 
-	local imageTypes = " jpg png gif webp "
-	local videoTypes = " mp4 webm "
-	local allTypes = imageTypes .. videoTypes
-	local function fetchMedia(path, themeDir)
-		local backgroundTable = {}
-		local backgroundCount = 0
-		for i, f in ipairs(glob(path)) do
-			attr = fs.stat(f)
-			if attr then
-				local ext = fs.basename(f):match(".+%.(%w+)$")
-				if ext ~= nil then
-					ext = ext:lower()
-				end
-				if ext ~= nil and string.match(allTypes, " "..ext.." ") ~= nil then
-					local bg = {}
-					bg.type = ext
-					bg.url = themeDir .. fs.basename(f)
-					table.insert(backgroundTable, bg)
-					backgroundCount = backgroundCount + 1
-				end
-			end
-		end
-		return backgroundTable, backgroundCount
-	end
-	local function selectBackground(themeDir)
-		local bgUrl			= media .. "/img/bg1.jpg"
-		local backgroundType	= "Image"
-		local mimeType			= ""
+    local imageTypes = " jpg png gif webp "
+    local videoTypes = " mp4 webm "
+    local allTypes = imageTypes .. videoTypes
+    local function fetchMedia(path, themeDir)
+        local backgroundTable = {}
+        local backgroundCount = 0
+        for i, f in ipairs(glob(path)) do
+            attr = fs.stat(f)
+            if attr then
+                local ext = fs.basename(f):match(".+%.(%w+)$")
+                if ext ~= nil then
+                    ext = ext:lower()
+                end
+                if ext ~= nil and string.match(allTypes, " "..ext.." ") ~= nil then
+                    local bg = {}
+                    bg.type = ext
+                    bg.url = themeDir .. fs.basename(f)
+                    table.insert(backgroundTable, bg)
+                    backgroundCount = backgroundCount + 1
+                end
+            end
+        end
+        return backgroundTable, backgroundCount
+    end
+    local function selectBackground(themeDir)
+        local bgUrl                = media .. "/img/bg1.jpg"
+        local backgroundType    = "Image"
+        local mimeType          = ""
 
-		if fs.access("/etc/config/argon") then
-			local online_wallpaper = uci:get_first('argon', 'global', 'online_wallpaper') or (uci:get_first('argon', 'global', 'bing_background') == '1' and 'bing')
-			if (online_wallpaper and online_wallpaper ~= "none") then
-				local picurl = sys.exec("/usr/libexec/argon/online_wallpaper")
-				if (picurl and picurl ~= '') then
-					return picurl, "Image", ""
-				end
-			end
-		end
+        if fs.access("/etc/config/argon") then
+            local online_wallpaper = uci:get_first('argon', 'global', 'online_wallpaper') or (uci:get_first('argon', 'global', 'bing_background') == '1' and 'bing')
+            if (online_wallpaper and online_wallpaper ~= "none") then
+                local picurl = sys.exec("/usr/libexec/argon/online_wallpaper")
+                if (picurl and picurl ~= '') then
+                    picpath = media .. "/img/bg.jpg"
+                    return picpath, "Image", ""
+                end
+            end
+        end
 
-		local backgroundTable, backgroundCount = fetchMedia("/www" .. themeDir .. "*", themeDir)
-		if ( backgroundCount > 0 ) then
-			local currentBg = backgroundTable[math.random(1, backgroundCount)]
-			bgUrl			= media .. "/img/bg.jpg"
-			if (string.match(videoTypes, " "..currentBg.type.." ") ~= nil) then
-				backgroundType	= "Video"
-				mimeType		= "video/" .. currentBg.type
-			end
-		end
+        local backgroundTable, backgroundCount = fetchMedia("/www" .. themeDir .. "*", themeDir)
+        if ( backgroundCount > 0 ) then
+            local currentBg = backgroundTable[math.random(1, backgroundCount)]
+            bgUrl            = currentBg.url
 
-		return bgUrl, backgroundType, mimeType
-	end
+            if (string.match(videoTypes, " "..currentBg.type.." ") ~= nil) then
+                backgroundType  = "Video"
+                mimeType        = "video/" .. currentBg.type
+            end
+        end
 
-	local boardinfo			= util.ubus("system", "board")
-	local themeDir			= media .. "/background/"
-	local bgUrl, backgroundType, mimeType = selectBackground(themeDir)
+        return bgUrl, backgroundType, mimeType
+    end
+
+    local boardinfo            = util.ubus("system", "board")
+    local themeDir             = media .. "/background/"
+    local bgUrl, backgroundType, mimeType = selectBackground(themeDir)
 %>
 
 <%
-	local sys = require "luci.sys"
-	local util = require "luci.util"
-	local http = require "luci.http"
-	local disp = require "luci.dispatcher"
-	local ver = require "luci.version"
+    local sys = require "luci.sys"
+    local util = require "luci.util"
+    local http = require "luci.http"
+    local disp = require "luci.dispatcher"
+    local ver = require "luci.version"
 
-	local boardinfo = util.ubus("system", "board")
+    local boardinfo = util.ubus("system", "board")
 
-	local node = disp.context.dispatched
+    local node = disp.context.dispatched
 
-	local fs = require "nixio.fs"
-	local nutil = require "nixio.util"
-	local uci = require 'luci.model.uci'.cursor()
+    local fs = require "nixio.fs"
+    local nutil = require "nixio.util"
+    local uci = require 'luci.model.uci'.cursor()
 
-	-- send as HTML5
-	http.prepare_content("text/html")
+    -- send as HTML5
+    http.prepare_content("text/html")
 
-	math.randomseed(os.time())
+    math.randomseed(os.time())
 
-	-- Custom settings
-	local mode = 'normal'
-	local dark_css = fs.readfile('/www/luci-static/argon/css/dark.css')
-	local bar_color = '#5e72e4'
-	local primary, dark_primary, blur_radius, blur_radius_dark, blur_opacity
-	if fs.access('/etc/config/argon') then
-		primary = uci:get_first('argon', 'global', 'primary')
-		dark_primary = uci:get_first('argon', 'global', 'dark_primary')
-		blur_radius = uci:get_first('argon', 'global', 'blur')
-		blur_radius_dark = uci:get_first('argon', 'global', 'blur_dark')
-		blur_opacity = uci:get_first('argon', 'global', 'transparency')
-		blur_opacity_dark = uci:get_first('argon', 'global', 'transparency_dark')
-		mode = uci:get_first('argon', 'global', 'mode')
-		bar_color = mode == 'dark' and dark_primary or primary
-	end
+    -- Custom settings
+    local mode = 'normal'
+    local dark_css = fs.readfile('/www/luci-static/argon/css/dark.css')
+    local bar_color = '#5e72e4'
+    local primary, dark_primary, blur_radius, blur_radius_dark, blur_opacity
+    if fs.access('/etc/config/argon') then
+        primary = uci:get_first('argon', 'global', 'primary')
+        dark_primary = uci:get_first('argon', 'global', 'dark_primary')
+        blur_radius = uci:get_first('argon', 'global', 'blur')
+        blur_radius_dark = uci:get_first('argon', 'global', 'blur_dark')
+        blur_opacity = uci:get_first('argon', 'global', 'transparency')
+        blur_opacity_dark = uci:get_first('argon', 'global', 'transparency_dark')
+        mode = uci:get_first('argon', 'global', 'mode')
+        bar_color = mode == 'dark' and dark_primary or primary
+    end
 
-	-- Brand name
-	local brand_name = boardinfo.hostname or "?"
+    -- Brand name
+    local brand_name = boardinfo.hostname or "?"
 -%>
 <!DOCTYPE html>
 <html lang="<%=luci.i18n.context.lang%>">
 
 <head>
-	<meta charset="utf-8">
-	<title>
-		<%=striptags( (boardinfo.hostname or "?") .. ( (node and node.title) and ' - ' .. translate(node.title) or '')) %>
-		- LuCI</title>
-	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-	<meta name="format-detection" content="telephone=no, email=no" />
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="x5-fullscreen" content="true">
-	<meta name="full-screen" content="yes">
-	<meta name="x5-page-mode" content="app">
-	<meta name="browsermode" content="application">
-	<meta name="msapplication-tap-highlight" content="no">
-	<meta name="msapplication-TileColor" content="<%=bar_color%>">
-	<meta name="application-name" content="<%=striptags( (boardinfo.hostname or "?") ) %> - LuCI">
-	<meta name="apple-mobile-web-app-title" content="<%=striptags( (boardinfo.hostname or "?") ) %> - LuCI">
-	<link rel="apple-touch-icon" sizes="60x60" href="<%=media%>/icon/apple-icon-60x60.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="<%=media%>/icon/apple-icon-72x72.png">
-	<link rel="apple-touch-icon" sizes="144x144" href="<%=media%>/icon/apple-icon-144x144.png">
-	<link rel="icon" type="image/png" sizes="192x192" href="<%=media%>/icon/android-icon-192x192.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="<%=media%>/icon/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="96x96" href="<%=media%>/icon/favicon-96x96.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="<%=media%>/icon/favicon-16x16.png">
-	<link rel="manifest" href="<%=media%>/icon/manifest.json"  crossorigin="use-credentials">
-	<meta name="msapplication-TileColor" content="<%=bar_color%>">
-	<meta name="msapplication-TileImage" content="<%=media%>/icon/ms-icon-144x144.png">
-	<meta name="theme-color" content="<%=bar_color%>">
-	<link rel="stylesheet" href="<%=media%>/css/cascade.css?v=2025.02.07">
-	<style title="text/css">
+    <meta charset="utf-8">
+    <title>
+        <%=striptags( (boardinfo.hostname or "?") .. ( (node and node.title) and ' - ' .. translate(node.title) or '')) %>
+        - LuCI</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="full-screen" content="yes">
+    <meta name="x5-page-mode" content="app">
+    <meta name="browsermode" content="application">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="msapplication-TileColor" content="<%=bar_color%>">
+    <meta name="application-name" content="<%=striptags( (boardinfo.hostname or "?") ) %> - LuCI">
+    <meta name="apple-mobile-web-app-title" content="<%=striptags( (boardinfo.hostname or "?") ) %> - LuCI">
+    <link rel="apple-touch-icon" sizes="60x60" href="<%=media%>/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="<%=media%>/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="<%=media%>/icon/apple-icon-144x144.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="<%=media%>/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%=media%>/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="<%=media%>/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%=media%>/icon/favicon-16x16.png">
+    <link rel="manifest" href="<%=media%>/icon/manifest.json"  crossorigin="use-credentials">
+    <meta name="msapplication-TileColor" content="<%=bar_color%>">
+    <meta name="msapplication-TileImage" content="<%=media%>/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="<%=bar_color%>">
+    <link rel="stylesheet" href="<%=media%>/css/cascade.css?v=2025.02.07">
+    <style title="text/css">
         <% if mode == 'normal' then %>
             @media (prefers-color-scheme: dark) {
                 <%=dark_css%>
@@ -183,79 +185,79 @@
         }
         <% end -%>
         </style>
-	<link rel="shortcut icon" href="<%=media%>/favicon.ico">
-	<% if node and node.css then %>
-	<link rel="stylesheet" href="<%=resource%>/<%=node.css%>">
-	<% end -%>
-	<% if css then %>
-	<style title="text/css">
-		<%=css %>
-	</style>
-	<% end -%>
-	<script src="<%=media%>/js/polyfill.min.js?v=2025.02.07"></script>
-	<script src="<%=url('admin/translations', luci.i18n.context.lang)%>?v=<%=ver.luciversion%>"></script>
-	<script src="<%=resource%>/cbi.js?v=<%=ver.luciversion%>"></script>
-	<script src="<%=resource%>/luci.js?v=<%=ver.luciversion%>"></script>
-	<script src="<%=media%>/js/jquery.min.js?v=3.5.1"></script>
+    <link rel="shortcut icon" href="<%=media%>/favicon.ico">
+    <% if node and node.css then %>
+    <link rel="stylesheet" href="<%=resource%>/<%=node.css%>">
+    <% end -%>
+    <% if css then %>
+    <style title="text/css">
+        <%=css %>
+    </style>
+    <% end -%>
+    <script src="<%=media%>/js/polyfill.min.js?v=2025.02.07"></script>
+    <script src="<%=url('admin/translations', luci.i18n.context.lang)%>?v=<%=ver.luciversion%>"></script>
+    <script src="<%=resource%>/cbi.js?v=<%=ver.luciversion%>"></script>
+    <script src="<%=resource%>/luci.js?v=<%=ver.luciversion%>"></script>
+    <script src="<%=media%>/js/jquery.min.js?v=3.5.1"></script>
 </head>
 
 <body
-	class="lang_<%=luci.i18n.context.lang%> <% if node then %><%= striptags( node.title ) %><% end %> <% if luci.dispatcher.context.authsession then %>logged-in<% end %>"
-	data-page="<%= table.concat(disp.context.requestpath, "-") %>">
+    class="lang_<%=luci.i18n.context.lang%> <% if node then %><%= striptags( node.title ) %><% end %> <% if luci.dispatcher.context.authsession then %>logged-in<% end %>"
+    data-page="<%= table.concat(disp.context.requestpath, "-") %>">
 
-	<% if ( backgroundType == "Image" ) then %>
-	<div class="main" style="background-image:url(<%=bgUrl%>)" >
-	<% else %>
-	<div class="main" >
-	<% end %>
-		<div class="main-left" id="mainmenu" style="display:none">
-			<div class="sidenav-header d-flex align-items-center">
-				<a class="brand" href="#"><%=brand_name%></a>
-				<div class="ml-auto">
-					<!-- Sidenav toggler -->
-					<div class="sidenav-toggler d-none d-xl-block active" data-action="sidenav-unpin"
-						data-target="#sidenav-main">
-						<div class="sidenav-toggler-inner">
-							<i class="sidenav-toggler-line"></i>
-							<i class="sidenav-toggler-line"></i>
-							<i class="sidenav-toggler-line"></i>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="main-right">
-			<header class="bg-primary">
-				<div class="fill">
-					<div class="container">
-						<div class="flex1">
-							<a class="showSide"></a>
-							<a class="brand" href="#"><%=brand_name%></a>
-						</div>
-						<div class="status" id="indicators"></div>
-					</div>
-				</div>
-			</header>
-			<div class="darkMask"></div>
-			<div id="maincontent">
-				<div class="container">
-					<%- if luci.sys.process.info("uid") == 0 and luci.sys.user.getuser("root") and not luci.sys.user.getpasswd("root") then -%>
-					<div class="alert-message error">
-						<h4><%:No password set!%></h4>
-						<p><%:There is no password set on this router. Please configure a root password to protect the web interface.%>
-						</p>
-						<% if disp.lookup("admin/system/admin") then %>
-						<div class="right"><a class="btn"
-								href="<%=url("admin/system/admin")%>"><%:Go to password configuration...%></a></div>
-						<% end %>
-					</div>
-					<%- end -%>
+    <% if ( backgroundType == "Image" ) then %>
+    <div class="main" style="background-image:url(<%=bgUrl%>)" >
+    <% else %>
+    <div class="main" >
+    <% end %>
+        <div class="main-left" id="mainmenu" style="display:none">
+            <div class="sidenav-header d-flex align-items-center">
+                <a class="brand" href="#"><%=brand_name%></a>
+                <div class="ml-auto">
+                    <!-- Sidenav toggler -->
+                    <div class="sidenav-toggler d-none d-xl-block active" data-action="sidenav-unpin"
+                        data-target="#sidenav-main">
+                        <div class="sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-right">
+            <header class="bg-primary">
+                <div class="fill">
+                    <div class="container">
+                        <div class="flex1">
+                            <a class="showSide"></a>
+                            <a class="brand" href="#"><%=brand_name%></a>
+                        </div>
+                        <div class="status" id="indicators"></div>
+                    </div>
+                </div>
+            </header>
+            <div class="darkMask"></div>
+            <div id="maincontent">
+                <div class="container">
+                    <%- if luci.sys.process.info("uid") == 0 and luci.sys.user.getuser("root") and not luci.sys.user.getpasswd("root") then -%>
+                    <div class="alert-message error">
+                        <h4><%:No password set!%></h4>
+                        <p><%:There is no password set on this router. Please configure a root password to protect the web interface.%>
+                        </p>
+                        <% if disp.lookup("admin/system/admin") then %>
+                        <div class="right"><a class="btn"
+                                href="<%=url("admin/system/admin")%>"><%:Go to password configuration...%></a></div>
+                        <% end %>
+                    </div>
+                    <%- end -%>
 
-					<noscript>
-						<div class="alert-message error">
-							<h4><%:JavaScript required!%></h4>
-							<p><%:You must enable JavaScript in your browser or LuCI will not work properly.%></p>
-						</div>
-					</noscript>
+                    <noscript>
+                        <div class="alert-message error">
+                            <h4><%:JavaScript required!%></h4>
+                            <p><%:You must enable JavaScript in your browser or LuCI will not work properly.%></p>
+                        </div>
+                    </noscript>
 
-					<div id="tabmenu" style="display:none"></div>
+                    <div id="tabmenu" style="display:none"></div>
