@@ -84,7 +84,7 @@
 		local backgroundTable, backgroundCount = fetchMedia("/www" .. themeDir .. "*", themeDir)
 		if ( backgroundCount > 0 ) then
 			local currentBg = backgroundTable[math.random(1, backgroundCount)]
-			bgUrl			= currentBg.url
+			bgUrl			= media .. "/img/bg.jpg"
 			if (string.match(videoTypes, " "..currentBg.type.." ") ~= nil) then
 				backgroundType	= "Video"
 				mimeType		= "video/" .. currentBg.type
@@ -122,7 +122,7 @@
 	<!-- Video Player End -->
 	<% else %>
 	<!-- Image Background Start -->
-	<div class="main-bg" id="main-bg" style="background-image:url(<%=bgUrl%>)"></div>
+	<div class="main-bg" id="main-bg" style="background-image:url(<%=media%>/img/bg.jpg)"></div>
 	<!-- Image Background End -->
 	<% end %>
 	<!-- Login Container Start -->

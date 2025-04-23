@@ -78,7 +78,7 @@
 		local backgroundTable, backgroundCount = fetchMedia("/www" .. themeDir .. "*", themeDir)
 		if ( backgroundCount > 0 ) then
 			local currentBg = backgroundTable[math.random(1, backgroundCount)]
-			bgUrl			= currentBg.url
+			bgUrl			= media .. "/img/bg.jpg"
 			if (string.match(videoTypes, " "..currentBg.type.." ") ~= nil) then
 				backgroundType	= "Video"
 				mimeType		= "video/" .. currentBg.type
@@ -163,7 +163,7 @@
 	<meta name="msapplication-TileColor" content="<%=bar_color%>">
 	<meta name="msapplication-TileImage" content="<%=media%>/icon/ms-icon-144x144.png">
 	<meta name="theme-color" content="<%=bar_color%>">
-	<link rel="stylesheet" href="<%=media%>/css/cascade.css<%# ?v=PKG_VERSION %>">
+	<link rel="stylesheet" href="<%=media%>/css/cascade.css?v=2025.02.07">
 	<style title="text/css">
         <% if mode == 'normal' then %>
             @media (prefers-color-scheme: dark) {
@@ -192,7 +192,7 @@
 		<%=css %>
 	</style>
 	<% end -%>
-	<script src="<%=media%>/js/polyfill.min.js"></script>
+	<script src="<%=media%>/js/polyfill.min.js?v=2025.02.07"></script>
 	<script src="<%=url('admin/translations', luci.i18n.context.lang)%>?v=<%=ver.luciversion%>"></script>
 	<script src="<%=resource%>/cbi.js?v=<%=ver.luciversion%>"></script>
 	<script src="<%=resource%>/luci.js?v=<%=ver.luciversion%>"></script>
@@ -204,7 +204,7 @@
 	data-page="<%= table.concat(disp.context.requestpath, "-") %>">
 
 	<% if ( backgroundType == "Image" ) then %>
-	<div class="main" style="background-image:url(<%=bgUrl%>)" >
+	<div class="main" style="background-image:url(<%=media%>/img/bg.jpg)" >
 	<% else %>
 	<div class="main" >
 	<% end %>
