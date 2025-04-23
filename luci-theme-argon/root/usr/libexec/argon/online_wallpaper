@@ -113,8 +113,11 @@ function get_url() {
 function main() {
     declare img_url
     img_url="$(get_url)"
-    echo "${img_url}"
-    curl -fks --max-time ${CURL_MAXTIME} --url "$(echo "${img_url}" | sed 's/^\/\///g')" -o ${BACKGROUND_IMG_PATH}/bg.jpg
+
+    if [[ "${img_url}" != "" ]]; then
+        echo "${img_url}"
+        curl -fks --max-time ${CURL_MAXTIME} --url "$(echo "${img_url}" | sed 's/^\/\///g')" -o ${BACKGROUND_IMG_PATH}/bg.jpg
+    fi
 }
 
 main "${@}"
