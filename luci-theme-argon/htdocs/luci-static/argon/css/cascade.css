@@ -1381,6 +1381,7 @@ select[multiple="multiple"] {
 }
 pre {
   overflow: auto;
+  background-color: transparent !important;
 }
 code {
   padding: 1px 3px;
