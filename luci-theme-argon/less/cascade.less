@@ -4651,3 +4651,8 @@ pre.command-output {
     border-radius: .375rem;
     box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
 }
+
+/* 匹配所有包含指定样式的 div（无论其他样式或ID如何） */
+div[style*="width:100%"] {
+    background: transparent !important;
+}
