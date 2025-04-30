@@ -2853,10 +2853,6 @@ td > table > tbody > tr > td,
   transition: opacity 0.25s ease-in;
   margin: inherit !important;
 }
-.cbi-section[id] .cbi-section-remove:nth-of-type(4n+3),
-.cbi-section[id] .cbi-section-node:nth-of-type(4n+4) {
-  background-color: var(--background-color);
-}
 .cbi-section-node-tabbed {
   margin-top: 0;
   padding: 0;
