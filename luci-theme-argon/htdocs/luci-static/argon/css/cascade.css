@@ -2716,7 +2716,6 @@ td > table > tbody > tr > td,
 .tabs {
   margin: 0 0 1rem 0;
   padding: 0 1rem;
-  background-color: var(--background-color);
   border-radius: 0.25rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
   white-space: nowrap;
@@ -2737,7 +2736,6 @@ td > table > tbody > tr > td,
 .tabs li[class~="active"],
 .tabs li:hover {
   cursor: pointer;
-  border-bottom: 0.18751rem solid #5e72e4;
   border-bottom: 0.18751rem solid var(--primary);
   color: #5e72e4;
   color: var(--primary);
@@ -2764,7 +2762,6 @@ td > table > tbody > tr > td,
   padding: 0.5rem 0.8rem;
 }
 .tabs li:hover {
-  border-bottom: 0.18751rem solid #5e72e4;
   border-bottom: 0.18751rem solid var(--primary);
 }
 .cbi-tabmenu {
@@ -2787,7 +2784,6 @@ td > table > tbody > tr > td,
   background-color: var(--background-color);
 }
 .cbi-tabmenu li {
-  background: #dce3e9;
   display: inline-block;
   font-size: 0.875rem;
   border-top-left-radius: 0.25rem;
@@ -2805,7 +2801,6 @@ td > table > tbody > tr > td,
   cursor: pointer;
   border-bottom: 0.18751rem solid #5e72e4;
   border-bottom: 0.18751rem solid var(--primary);
-  color: #5e72e4;
   color: var(--primary);
   background-color: #e4e9ee;
   margin-bottom: 0;
@@ -2816,13 +2811,11 @@ td > table > tbody > tr > td,
 .cbi-tabmenu li[class~="cbi-tab"] {
   border-bottom: 0.18751rem solid #5e72e4;
   border-bottom: 0.18751rem solid var(--primary);
-  color: #5e72e4;
   color: var(--primary);
   background-color: #e4e9ee;
   margin-bottom: 0;
 }
 .cbi-tabmenu li[class~="cbi-tab"] a {
-  color: #5e72e4;
   color: var(--primary);
 }
 .cbi-tab-descr {
