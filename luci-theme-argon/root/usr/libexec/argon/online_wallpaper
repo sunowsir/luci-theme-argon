@@ -13,15 +13,17 @@ CACHE=/var/run/argon_${WEB_PIC_SRC}.url
 WRLOCK=/var/lock/argon_${WEB_PIC_SRC}.lock
 CURL_MAXTIME=30
 BACKGROUND_IMG_PATH="/www/luci-static/argon/img/"
+RESOLUTION_X='2560'
+RESOLUTION_Y='1440'
 
 function fetch_pic_url() {
     case ${WEB_PIC_SRC} in
     bing)
         declare picpath
         picpath=$(curl -fks --max-time ${CURL_MAXTIME} \
-            "https://www.bing.com/HPImageArchive.aspx?format=js&n=1" |
+            "https://www.bing.com/HPImageArchive.aspx?format=js&n=1&uhd=1" |
             jsonfilter -qe '@.images[0].url')
-        [ -n "${picpath}" ] && echo "//www.bing.com${picpath}"
+        [[ -n "${picpath}" ]] && echo "//www.bing.com${picpath}" | sed "s/w=[0-9]*/${RESOLUTION_X}/g" | sed "s/h=[0-9]*/${RESOLUTION_Y}/g"
         ;;
     unsplash)
         # fix from https://github.com/sbwml/luci-theme-argon
@@ -40,8 +42,8 @@ function fetch_pic_url() {
         local collection_id=${WEB_PIC_SRC#unsplash_}
         if [[ -z "${API_KEY}" ]]; then
             curl -fks --max-time ${CURL_MAXTIME} \
-                "https://source.unsplash.com/collection/${collection_id}/1920x1080" |
-                sed -E 's#^.*href="([^?]+)\?.*$#\1?fm=jpg\&fit=crop\&w=1920\&h=1080#'
+                "https://source.unsplash.com/collection/${collection_id}/${RESOLUTION_X}x${RESOLUTION_Y}" |
+                sed -E 's#^.*href="([^?]+)\?.*$#\1?fm=jpg\&fit=crop\&w=${RESOLUTION_X}\&h=${RESOLUTION_Y}#'
         else
             curl -fks --max-time ${CURL_MAXTIME} \
                 "https://api.unsplash.com/photos/random?client_id=${API_KEY}&collections=${collection_id}" |
@@ -50,17 +52,17 @@ function fetch_pic_url() {
         ;;
     wallhaven)
         curl -fks --max-time ${CURL_MAXTIME} \
-            "https://wallhaven.cc/api/v1/search?resolutions=1920x1080&sorting=random" |
+            "https://wallhaven.cc/api/v1/search?resolutions=${RESOLUTION_X}x${RESOLUTION_Y}&sorting=random" |
             jsonfilter -qe '@.data[0].path'
         ;;
     wallhaven_*)
         local tag_id=${WEB_PIC_SRC#wallhaven_}
         local has_api_key=""
-        [ -n "${API_KEY}" ] && has_api_key="apikey=${API_KEY}" || has_api_key=""
+        [[ -n "${API_KEY}" ]] && has_api_key="apikey=${API_KEY}" || has_api_key=""
         local use_reso="resolutions"
-        [ "${EXACT_RESO}" -eq "1" ] && use_reso='resolutions' || use_reso='atleast'
+        [[ "${EXACT_RESO}" -eq "1" ]] && use_reso='resolutions' || use_reso='atleast'
         curl -fks --max-time ${CURL_MAXTIME} \
-            "https://wallhaven.cc/api/v1/search?${has_api_key}q=id%3A${tag_id}&${use_reso}=1920x1080&sorting=random" |
+            "https://wallhaven.cc/api/v1/search?${has_api_key}q=id%3A${tag_id}&${use_reso}=${RESOLUTION_X}x${RESOLUTION_Y}&sorting=random" |
             jsonfilter -qe '@.data[0].path'
         ;;
     esac
