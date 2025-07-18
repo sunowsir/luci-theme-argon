@@ -4886,6 +4886,7 @@ pre.command-output {
 div[style*="width:100%"] {
   background: transparent !important;
 }
+/* luci-app-openclash theme */
 .oc {
   background: transparent !important;
 }
@@ -4896,6 +4897,27 @@ div[style*="width:100%"] {
   background: transparent !important;
 }
 .oc .subscription-info-container {
+  background: transparent !important;
+}
+.oc .developer-container {
+  background: transparent !important;
+}
+.oc .config-select {
+  background: transparent !important;
+}
+.oc .config-select option {
+  background: transparent !important;
+}
+.oc .value-indicator {
+  background: transparent !important;
+}
+.oc .cbi-button-group {
+  background: transparent !important;
+}
+.oc .icon-btn {
+  background: transparent !important;
+}
+.oc .version-display {
   background: transparent !important;
 }
 .oc .sub-card {
