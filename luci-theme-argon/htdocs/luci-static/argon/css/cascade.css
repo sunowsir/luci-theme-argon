@@ -4900,6 +4900,8 @@ div[style*="width:100%"] {
   background: transparent !important;
 }
 .oc .developer-container {
+  margin: auto !important;
+  width: 99% !important;
   background: transparent !important;
 }
 .oc .config-select {
