@@ -16,9 +16,6 @@ BACKGROUND_IMG_PATH='/www/luci-static/argon/img/'
 RESOLUTION_X='2560'
 RESOLUTION_Y='1440'
 REFRESH_INTERVAL_SEC=$((15 * 60))
-REFRESH_INTERVAL_FLAG_F='/var/run/argon_refresh_time.flag'
-MAST_REFRESH_FLAG=0
-
 
 function fetch_pic_url() {
     case ${WEB_PIC_SRC} in
@@ -55,9 +52,16 @@ function fetch_pic_url() {
         fi
         ;;
     wallhaven)
-        curl -fks --max-time ${CURL_MAXTIME} \
-            "https://wallhaven.cc/api/v1/search?resolutions=${RESOLUTION_X}x${RESOLUTION_Y}&sorting=random" |
-            jsonfilter -qe '@.data[0].path'
+        declare res_info
+        res_info=$(curl -fks --max-time ${CURL_MAXTIME} "https://wallhaven.cc/api/v1/search?atleast=${RESOLUTION_X}x${RESOLUTION_Y}&sorting=views&categories=111&purity=111") 
+
+        declare per_page
+        per_page=$(echo "${res_info}" | jsonfilter -qe '@.meta.per_page')
+
+        declare ramdom_idx
+        ramdom_idx=$(( RANDOM % per_page ))
+
+        echo "${res_info}" | jsonfilter -qe '@.data['${ramdom_idx}'].path'
         ;;
     wallhaven_*)
         local tag_id=${WEB_PIC_SRC#wallhaven_}
@@ -65,8 +69,9 @@ function fetch_pic_url() {
         [[ -n "${API_KEY}" ]] && has_api_key="apikey=${API_KEY}" || has_api_key=""
         local use_reso="resolutions"
         [[ "${EXACT_RESO}" -eq "1" ]] && use_reso='resolutions' || use_reso='atleast'
+
         curl -fks --max-time ${CURL_MAXTIME} \
-            "https://wallhaven.cc/api/v1/search?${has_api_key}q=id%3A${tag_id}&${use_reso}=${RESOLUTION_X}x${RESOLUTION_Y}&sorting=random" |
+            "https://wallhaven.cc/api/v1/search?${has_api_key}q=id%3A${tag_id}&${use_reso}=${RESOLUTION_X}x${RESOLUTION_Y}&sorting=views&categories=111&purity=111" |
             jsonfilter -qe '@.data[0].path'
         ;;
     esac
@@ -100,66 +105,25 @@ function try_update() {
 }
 
 function get_url() {
-    if [[ -f "${CACHE}" ]]; then
+    if [[ -f "${CACHE}" ]] && [[ -s "${CACHE}" ]]; then
         local idle_t=$(($(date '+%s') - $(date -r "${CACHE}" '+%s' 2>/dev/null || echo '0')))
-        if [[ -s "${CACHE}" ]]; then
-            if [[ ${idle_t} -le 43200 ]]; then
-                cat "${CACHE}"
-                return
-            fi
-        else
-            if [[ ${idle_t} -le 120 ]]; then
-                return
-            fi
+        if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]]; then
+            return
         fi
     fi
     try_update
 }
 
-function get_wallpaper() {
+function main() {
     declare img_url
-    img_url="${1}"
-    
+    img_url="$(get_url)"
+
     if [[ "${img_url}" != "" ]]; then
         rm -rf ${BACKGROUND_IMG_PATH}/bg.jpg
         curl -fks --max-time ${CURL_MAXTIME} --url "$(echo "${img_url}" | sed 's/^\/\///g')" -o ${BACKGROUND_IMG_PATH}/bg.jpg
     fi
-}
-
-function get_wallpaper_proc() {
-    declare img_url
-    img_url="${1}"
-
-    declare now_time
-    now_time="$(date +%s)"
-
-    if [[ ! -f ${REFRESH_INTERVAL_FLAG_F} ]]; then
-        echo "${now_time}" > "${REFRESH_INTERVAL_FLAG_F}"
-    fi
-
-    declare last_time
-    last_time="$(cat ${REFRESH_INTERVAL_FLAG_F})"
-
-    declare interval_sec_time
-    interval_sec_time="$((now_time - last_time))"
-
-    if [[ ${interval_sec_time} -ge ${REFRESH_INTERVAL_SEC} ]] || 
-       [[ ${MAST_REFRESH_FLAG} -eq 1 ]]; then
-        get_wallpaper "${img_url}"
-        echo "${now_time}" > "${REFRESH_INTERVAL_FLAG_F}"
-    fi
 
     cat "${CACHE}"
-}
-
-function main() {
-    if [[ ! -f "${CACHE}" ]]; then
-        MAST_REFRESH_FLAG=1
-    fi
-    declare img_url
-    img_url="$(get_url)"
-
-    get_wallpaper_proc "${img_url}"
 }
 
 main "${@}"
