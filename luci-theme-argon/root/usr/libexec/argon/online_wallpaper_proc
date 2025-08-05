@@ -53,7 +53,7 @@ function fetch_pic_url() {
         ;;
     wallhaven)
         declare parameter
-        parameter='atleast='"${RESOLUTION_X}"'x'"${RESOLUTION_Y}"'&sorting=views&categories=111&purity=110'
+        parameter='atleast='"${RESOLUTION_X}"'x'"${RESOLUTION_Y}"'&sorting=views&categories=111&purity=100'
 
         declare res_info
         res_info=$(curl -fks --max-time ${CURL_MAXTIME} "https://wallhaven.cc/api/v1/search?${parameter}") 
@@ -82,7 +82,7 @@ function fetch_pic_url() {
         [[ "${EXACT_RESO}" -eq "1" ]] && use_reso='resolutions' || use_reso='atleast'
 
         curl -fks --max-time ${CURL_MAXTIME} \
-            "https://wallhaven.cc/api/v1/search?${has_api_key}q=id%3A${tag_id}&${use_reso}=${RESOLUTION_X}x${RESOLUTION_Y}&sorting=views&categories=111&purity=110" |
+            "https://wallhaven.cc/api/v1/search?${has_api_key}q=id%3A${tag_id}&${use_reso}=${RESOLUTION_X}x${RESOLUTION_Y}&sorting=views&categories=111&purity=100" |
             jsonfilter -qe '@.data[0].path'
         ;;
     esac
