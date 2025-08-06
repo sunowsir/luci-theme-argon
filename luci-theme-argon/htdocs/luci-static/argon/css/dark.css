@@ -2,7 +2,7 @@
  *  Argon is a clean HTML5 theme for LuCI. It is based on luci-theme-material and Argon Template
  *
  *  luci-theme-argon
- *      Copyright 2023 Jerryk <jerrykuku@gmail.com>
+ *      Copyright 2025 Jerryk <jerrykuku@gmail.com>
  *
  *  Have a bug? Please create an issue here on GitHub!
  *      https://github.com/jerrykuku/luci-theme-argon/issues
@@ -27,66 +27,16 @@
  *  Licensed to the public under the Apache License 2.0
  */
 :root {
-  --primary: #5e72e4;
-  --dark-primary: #483d8b;
-  --header-bg-primary-bg: rgba(255, 255, 255, 0);
-  --main-color: #09c;
-  --header-bg: #09c;
-  --header-color: #fff;
-  --bar-bg: #5e72e4;
-  --menu-bg-color: rgba(244, 245, 247, var(--blur-opacity));
-  --cbi-session-color: rgba(244, 245, 247, var(--blur-opacity));
-  --menu-color: #5f6368;
-  --menu-color-hover: #202124;
-  --main-menu-color: #202124;
-  --submenu-bg-hover: #d4d4d4;
-  --submenu-bg-hover-active: #09c;
-  --blue: #5e72e4;
-  --indigo: #5603ad;
-  --purple: #8965e0;
-  --pink: #f3a4b5;
-  --red: #f5365c;
-  --orange: #fb6340;
-  --yellow: #ffd600;
-  --green: #2dce89;
-  --teal: #11cdef;
-  --cyan: #2bffc6;
-  --gray: #8898aa;
-  --gray-dark: #32325d;
-  --light: #ced4da;
-  --lighter: #e9ecef;
-  --secondary: #f7fafc;
-  --success: #2dce89;
-  --info: #11cdef;
-  --warning: #fb6340;
-  --danger: #f5365c;
-  --light: #adb5bd;
-  --dark: #212529;
-  --default: #172b4d;
-  --white: #fff;
-  --neutral: #fff;
-  --darker: black;
-  --background-color: rgba(244, 245, 247, var(--blur-opacity));
-  --login-form-bg-color: rgba(244, 245, 247, 0.8);
-  --breakpoint-xs: 0;
-  --breakpoint-sm: 576px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 992px;
-  --breakpoint-xl: 1200px;
-  --blur-radius: 10px;
-  --blur-opacity: 0.5;
-  --blur-radius-dark: 10px;
-  --blur-opacity-dark: 0.5;
-  --font-family-sans-serif: "Google Sans", "Microsoft Yahei", "WenQuanYi Micro Hei", "sans-serif", "Helvetica Neue", "Helvetica", "Hiragino Sans GB";
-  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  --font-family-normal: Open Sans, PingFangSC-Regular, Microsoft Yahei, WenQuanYi Micro Hei, "Helvetica Neue", Helvetica, Hiragino Sans GB, sans-serif;
+  --menu-bg-dark-color: rgba(0, 0, 0, var(--blur-opacity-dark));
+  --cbi-session-dark-color: rgba(0, 0, 0, var(--blur-opacity-dark));
+  --background-dark-color: rgba(0, 0, 0, var(--blur-opacity-dark));
 }
 body {
-  background-color: var(--background-color);
+  background-color: var(--background-dark-color);
   color: #cccccc;
 }
 .login-page .login-container .login-form {
-  background-color: var(--background-color);
+  background-color: #1e1e1e;
   -webkit-backdrop-filter: blur(var(--blur-radius-dark));
   backdrop-filter: blur(var(--blur-radius-dark));
   background-color: rgba(0, 0, 0, var(--blur-opacity-dark));
@@ -119,7 +69,7 @@ header::after {
   background-color: #1e1e1e !important;
 }
 .main .main-left {
-  background-color: #333333 !important;
+  background-color: var(--menu-bg-dark-color) !important;
   box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.15);
 }
 .main .main-left .sidenav-header .brand {
@@ -160,22 +110,22 @@ header::after {
   color: #ffffff !important;
 }
 .main .main-left::-webkit-scrollbar-thumb {
-  background-color: #252526 !important;
+  background-color: var(--background-dark-color) !important;
 }
 .main .main-left::-webkit-scrollbar-track {
-  background-color: #333;
+  background-color: var(--background-dark-color) !important;
 }
 .main .main-right {
-  background-color: #1e1e1e;
+  background-color: var(--menu-bg-dark-color) !important;
 }
 h2 {
   color: #ccc;
-  background: #333333;
+  background-color: var(--background-dark-color) !important;
 }
 h3 {
   color: #ccc;
   border-bottom: 0;
-  background: #333333;
+  background-color: var(--background-dark-color) !important;
 }
 h4 {
   color: #8C6900;
@@ -207,7 +157,7 @@ input:-webkit-autofill {
   color: #ccc;
 }
 header.bg-primary {
-  background-color: #1e1e1e !important;
+  background-color: var(--background-dark-color) !important;
 }
 .cbi-map-descr {
   color: #ccc;
@@ -222,7 +172,7 @@ header.bg-primary {
 }
 div > table > tbody > tr:nth-of-type(2n),
 div > .table > .tr:nth-of-type(2n) {
-  background-color: #252526;
+  background-color: transparent !important;
 }
 table > tbody > tr > td,
 table > tfoot > tr > td,
@@ -308,7 +258,7 @@ h4 {
 .cbi-button {
   color: #ffffff !important;
   background-color: #483d8b;
-  background-color: var(--dark-primary);
+  background-color: var(--background-dark-color);
 }
 .cbi-section-node {
   background: none;
@@ -335,7 +285,7 @@ div > .table > .tbody > .tr:nth-of-type(2n) {
   background-color: #1e1e1e !important;
 }
 .tabs {
-  background-color: #252526;
+  background-color: var(--dark-primary);
 }
 .tabs li[class~="active"],
 .tabs li:hover {
@@ -356,6 +306,9 @@ div > .table > .tbody > .tr:nth-of-type(2n) {
   color: var(--dark-primary) !important;
   background-color: #181819;
 }
+.cbi-tabmenu {
+  background: var(--background-dark-color) !important;
+}
 .cbi-tabmenu > li > a,
 .tabs > li > a {
   color: #ccc;
@@ -365,18 +318,18 @@ div > .table > .tbody > .tr:nth-of-type(2n) {
   color: #ccc;
 }
 .cbi-tabmenu > li {
-  background: #2d2d2d;
+  background: var(--background-dark-color) !important;
 }
 .cbi-tabmenu li[class~="cbi-tab"] a {
   color: #ccc;
 }
 .cbi-tabmenu > li:hover {
   color: #ccc;
-  background: #2d2d2d;
+  background-color: var(--background-dark-color) !important;
   border-bottom: 0.18751rem solid var(--dark-primary) !important;
 }
 .cbi-tabmenu > li[class~="cbi-tab"] {
-  background-color: #181819;
+  background-color: var(--background-dark-color) !important;
   border-bottom: 0.18751rem solid var(--dark-primary) !important;
 }
 .cbi-tabcontainer > .cbi-value:nth-of-type(2n) {
@@ -436,7 +389,7 @@ textarea:focus-visible {
 }
 .cbi-section-remove:nth-of-type(2n),
 .cbi-section-node:nth-of-type(2n) {
-  background-color: #1e1e1e;
+  background-color: var(--background-dark-color);
 }
 .cbi-section[id] .cbi-section-remove:nth-of-type(4n+3),
 .cbi-section[id] .cbi-section-node:nth-of-type(4n+4) {
@@ -567,7 +520,7 @@ header .fill .status span[data-style="active"] {
 [data-page="admin-network-diagnostics"] .tr > .td,
 .tr.table-titles > .th,
 .tr.cbi-section-table-titles > .th {
-  background-color: #252526;
+  background-color: var(--background-dark-color) !important;
   border-bottom: black 1px solid !important;
 }
 .network-status-table .ifacebox-body .ifacebadge {
@@ -666,7 +619,7 @@ td > .ifacebadge,
 [data-tab-title],
 [data-page^="admin-system-admin"]:not(.node-main-login) .cbi-map:not(#cbi-dropbear),
 [data-page="admin-system-opkg"] #maincontent > .container {
-  background-color: var(--background-color) !important;
+  background-color: var(--background-dark-color) !important;
   box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.35);
 }
 div[style="width:100%;height:300px;border:1px solid #000;background:#fff"] {
@@ -730,7 +683,7 @@ input,
   border-color: var(--dark-primary) !important;
 }
 .cbi-dropdown[open] > ul.dropdown {
-  background: #252526 !important;
+  background-color: var(--background-dark-color) !important;
   color: #ffffff !important;
   box-shadow: none;
   border: 1px solid #3c3c3c !important;
@@ -820,27 +773,32 @@ input,
     box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.35);
   }
 }
+[data-page=""] .main-right > #maincontent .Dashboard,
 [data-page="admin-dashboard"] .main-right > #maincontent .Dashboard {
   color: #ccc !important;
 }
+[data-page=""] .main-right > #maincontent .Dashboard h3,
 [data-page="admin-dashboard"] .main-right > #maincontent .Dashboard h3 {
   color: #ccc;
 }
+[data-page=""] .main-right > #maincontent .Dashboard hr,
 [data-page="admin-dashboard"] .main-right > #maincontent .Dashboard hr {
   border-top: 1px solid #ffffff;
 }
+[data-page=""] .main-right > #maincontent .Dashboard .dashboard-bg,
 [data-page="admin-dashboard"] .main-right > #maincontent .Dashboard .dashboard-bg {
   background-color: #333333;
 }
-[data-page="admin-dashboard"] .main-right > #maincontent .router-status-info .title img,
-[data-page="admin-dashboard"] .main-right > #maincontent .lan-info .title img,
-[data-page="admin-dashboard"] .main-right > #maincontent .wifi-info .title img {
+[data-page=""] .main-right > #maincontent .Dashboard img.svgmonochrome,
+[data-page="admin-dashboard"] .main-right > #maincontent .Dashboard img.svgmonochrome {
   filter: invert(90%);
 }
-[data-page="admin-dashboard"] .main-right > #maincontent tr {
+[data-page=""] .main-right > #maincontent .Dashboard tr,
+[data-page="admin-dashboard"] .main-right > #maincontent .Dashboard tr {
   border-top: thin solid #4d4d4d;
 }
-[data-page="admin-dashboard"] .main-right > #maincontent tr:last-child {
+[data-page=""] .main-right > #maincontent .Dashboard tr:last-child,
+[data-page="admin-dashboard"] .main-right > #maincontent .Dashboard tr:last-child {
   border-bottom: thin solid #4d4d4d;
 }
 [data-page="admin-system-fileassistant"] .fb-container .panel-container {
@@ -848,6 +806,19 @@ input,
 }
 [data-page="admin-system-fileassistant"] .fb-container td[class$="-icon"]::before {
   filter: invert(0.7);
+}
+[data-page="admin-system-fileassistant"] div#list-content table.cbi-section-table tbody tr:nth-child(1) td.parent-icon {
+  background: #1e1e1e !important;
+}
+[data-page^="admin-services-openclash"] .oc {
+  --bg-light: #1e1e1e !important;
+  --bg-gray: #1e1e1e !important;
+}
+[data-page^="admin-services-openclash"] .oc .developer-container {
+  background: transparent !important;
+}
+[data-page^="admin-services-openclash"] .config-upload-content {
+  background: #1e1e1e !important;
 }
 [data-page^="admin-services-openclash"] .cbi-tabmenu::-webkit-scrollbar-thumb {
   background-color: #5b5b5b;
