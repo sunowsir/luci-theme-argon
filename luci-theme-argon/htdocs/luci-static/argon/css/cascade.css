@@ -4925,6 +4925,9 @@ div[style*="width:100%"] {
 .oc .version-display {
   background: transparent !important;
 }
+.oc .announcement-card {
+  background: transparent !important;
+}
 .oc .sub-card {
   background-color: var(--background-color) !important;
 }
