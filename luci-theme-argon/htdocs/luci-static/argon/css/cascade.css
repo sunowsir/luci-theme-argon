@@ -2773,8 +2773,7 @@ td > table > tbody > tr > td,
   border-radius: 0.25rem;
   white-space: nowrap;
   overflow-x: auto;
-  backdrop-filter: blur(var(--blur-radius));
-  background-color: var(--menu-bg-color);
+  background-color: var(--menu-bg-color) !important;
 }
 .cbi-tabmenu::-webkit-scrollbar {
   width: 1px;
