@@ -15,7 +15,9 @@ CURL_MAXTIME=30
 BACKGROUND_IMG_PATH='/www/luci-static/argon/img/'
 RESOLUTION_X='2560'
 RESOLUTION_Y='1440'
-REFRESH_INTERVAL_SEC=$((15 * 60))
+
+# 默认一小时刷新一次
+REFRESH_INTERVAL_SEC=$((1 * 60 * 60))
 
 function fetch_pic_url() {
     case ${WEB_PIC_SRC} in
