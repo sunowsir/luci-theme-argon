@@ -4109,9 +4109,9 @@ div[style*="display:grid;grid-template-columns:repeat"] .ifacebox .ifacebox-body
   min-height: 15rem;
   padding: 1rem;
   resize: none;
-  color: #8898aa;
   border-radius: 0.25rem;
-  border: 1px solid #dee2e6;
+  border: 1px solid transparent;
+  background-color: transparent;
 }
 [data-page="admin-system-startup"] textarea:focus-visible {
   outline: none;
