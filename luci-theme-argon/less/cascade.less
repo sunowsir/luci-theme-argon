@@ -1994,7 +1994,7 @@ td>table>tbody>tr>td,
     white-space: nowrap;
     overflow-x: auto;
 
-    background-color: var(--menu-bg-color) !important;
+    background-color: transparent !important;
 
     &::-webkit-scrollbar {
         width: 1px;
@@ -4028,6 +4028,7 @@ pre.command-output {
 
     #tab-content .dom {
         padding: 0 1rem 1rem 1rem;
+        background-color: var(--background-color);
     }
 
     .cbi-input-file {
@@ -4059,6 +4060,7 @@ pre.command-output {
     .CodeMirror {
         font-size: inherit;
         font-family: 'Google Sans' !important;
+        background-color: transparent !important;
     }
 
     .cbi-button-up,
@@ -4708,4 +4710,17 @@ div[style*="width:100%"] {
 .oc .myip-ip-item,
 .oc .myip-check-item {
     background-color: var(--background-color) !important;
+}
+
+#tab-header {
+    background-color: var(--background-color) !important;
+}
+
+.CodeMirror-scroll,
+.CodeMirror-sizer,
+.CodeMirror-gutter,
+.CodeMirror-gutters,
+.CodeMirror-linenumber {
+    background-color: transparent !important;
+    color: var(--black) !important;
 }

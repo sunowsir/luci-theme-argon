@@ -2773,7 +2773,7 @@ td > table > tbody > tr > td,
   border-radius: 0.25rem;
   white-space: nowrap;
   overflow-x: auto;
-  background-color: var(--menu-bg-color) !important;
+  background-color: transparent !important;
 }
 .cbi-tabmenu::-webkit-scrollbar {
   width: 1px;
@@ -4406,6 +4406,7 @@ pre.command-output {
 }
 [data-page^="admin-services-openclash"] #tab-content .dom {
   padding: 0 1rem 1rem 1rem;
+  background-color: var(--background-color);
 }
 [data-page^="admin-services-openclash"] .cbi-input-file {
   padding: 0.2813rem;
@@ -4432,6 +4433,7 @@ pre.command-output {
 [data-page^="admin-services-openclash"] .CodeMirror {
   font-size: inherit;
   font-family: 'Google Sans' !important;
+  background-color: transparent !important;
 }
 [data-page^="admin-services-openclash"] .cbi-button-up,
 [data-page^="admin-services-openclash"] .cbi-button-down {
@@ -4933,4 +4935,15 @@ div[style*="width:100%"] {
 .oc .myip-ip-item,
 .oc .myip-check-item {
   background-color: var(--background-color) !important;
+}
+#tab-header {
+  background-color: var(--background-color) !important;
+}
+.CodeMirror-scroll,
+.CodeMirror-sizer,
+.CodeMirror-gutter,
+.CodeMirror-gutters,
+.CodeMirror-linenumber {
+  background-color: transparent !important;
+  color: var(--black) !important;
 }
