@@ -4416,6 +4416,7 @@ pre.command-output {
 [data-page^="admin-services-openclash"] [id="container.openclash.config.debug"] fieldset {
   border: none !important;
   padding: 1rem !important;
+  background-color: transparent !important;
 }
 [data-page^="admin-services-openclash"] #diag-rc-output > pre,
 [data-page^="admin-services-openclash"] #dns-rc-output > pre {
