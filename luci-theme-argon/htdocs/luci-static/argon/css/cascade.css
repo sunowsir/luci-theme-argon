@@ -1206,6 +1206,8 @@ body {
 }
 textarea {
   padding: 0.2rem;
+  background-color: var(--background-color);
+  border: white;
 }
 textarea:focus-visible {
   outline: none;
