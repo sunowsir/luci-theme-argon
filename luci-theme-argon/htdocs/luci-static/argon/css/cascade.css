@@ -2806,7 +2806,7 @@ td > table > tbody > tr > td,
   border-bottom: 0.18751rem solid #5e72e4;
   border-bottom: 0.18751rem solid var(--primary);
   color: var(--primary);
-  background-color: #e4e9ee;
+  background-color: var(--background-color);
   margin-bottom: 0;
 }
 .cbi-tabmenu li:hover a {
@@ -2816,7 +2816,7 @@ td > table > tbody > tr > td,
   border-bottom: 0.18751rem solid #5e72e4;
   border-bottom: 0.18751rem solid var(--primary);
   color: var(--primary);
-  background-color: #e4e9ee;
+  background-color: var(--background-color);
   margin-bottom: 0;
 }
 .cbi-tabmenu li[class~="cbi-tab"] a {
