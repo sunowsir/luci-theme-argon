@@ -53,6 +53,12 @@ function fetch_pic_url() {
                 jsonfilter -qe '@["urls"]["regular"]'
         fi
         ;;
+    pexels)
+        if [[ ! -z "${API_KEY}" ]]; then
+            curl -fks --max-time ${CURL_MAXTIME} -H "Authorization: ${API_KEY}" \
+                "https://api.pexels.com/v1/curated?per_page=1" | jsonfilter -qe '@["photos"][0].src.original'
+        fi
+        ;;
     esac
 }
 
