@@ -15,6 +15,7 @@ CURL_MAXTIME=30
 BACKGROUND_IMG_PATH='/www/luci-static/argon/img/'
 RESOLUTION_X='2560'
 RESOLUTION_Y='1440'
+TRY_MAX=5
 
 # 默认一小时刷新一次
 REFRESH_INTERVAL_SEC=$((1 * 60 * 60))
@@ -55,8 +56,38 @@ function fetch_pic_url() {
         ;;
     pexels)
         if [[ ! -z "${API_KEY}" ]]; then
-            curl -fks --max-time ${CURL_MAXTIME} -H "Authorization: ${API_KEY}" \
-                "https://api.pexels.com/v1/curated?per_page=1" | jsonfilter -qe '@["photos"][0].src.original'
+            # curl -fks --max-time ${CURL_MAXTIME} -H "Authorization: ${API_KEY}" \
+            #     "https://api.pexels.com/v1/curated?per_page=1" | jsonfilter -qe '@["photos"][0].src.original'
+
+            for ((page = 1; page <= TRY_MAX; page++));
+            do
+                local result
+                result=$(curl -fks --max-time ${CURL_MAXTIME} -H "Authorization: ${API_KEY}" \
+                    "https://api.pexels.com/v1/curated?per_page=1&page=${page}")
+
+                if [[ "${result}" == "" ]]; then
+                    break;
+                fi
+
+                local width 
+                width=$(echo "${result}" | jsonfilter -eq '@["photos"][0].width')
+                if [[ ${width} -lt ${RESOLUTION_X} ]]; then
+                    continue
+                fi
+
+                local height
+                height=$(echo "${result}" | jsonfilter -eq '@["photos"][0].height')
+                if [[ ${height} -lt ${RESOLUTION_Y} ]]; then
+                    continue
+                fi
+
+                if [[ ${width} -lt ${height} ]]; then
+                    continue
+                fi
+
+                echo "${result}" | jsonfilter -qe '@["photos"][0].src.original'
+            done
+
         fi
         ;;
     esac
