@@ -130,9 +130,9 @@ textarea {
 
 ::selection {
     background-color: #5e72e4;
-    background-color: var(--primary);
+    background-color: var(--primary) !important;
     color: #ffffff;
-    color: var(--white);
+    color: var(--white) !important;
 }
 
 ::placeholder {
@@ -4652,6 +4652,7 @@ pre.command-output {
 
 /* 匹配所有包含指定样式的 div（无论其他样式或ID如何） */
 div[style*="width:100%"] {
+    border: 0px !important;
     background: transparent !important;
 }
 
