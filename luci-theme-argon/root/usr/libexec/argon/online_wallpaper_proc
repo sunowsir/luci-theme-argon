@@ -1,30 +1,32 @@
 #!/bin/bash
 # author jjm2473
+# modify author sun.wang fork to https://github.com/sunowsir/luci-theme-argon
 
-# the script will be excuted when `argon.@global[0].bing_background == '1'`
-# defaults to 'bing' to be compatible with old config
 WEB_PIC_SRC=$(uci -q get argon.@global[0].online_wallpaper || echo 'bing')
-# For now, the next two variables are used for wallhaven.cc with specified Tag ID
-# API_KEY if user has an account with wallhaven and want to use their apikey to allow for more images
-# EXACT_RESO is used for exact resolution by default, if not use 'atleast' instead of 'resolutions'
 API_KEY=$(uci -q get argon.@global[0].use_api_key)
-EXACT_RESO=$(uci -q get argon.@global[0].use_exact_resolution || echo '1')
+CURL_MAXTIME=$(uci -q get argon.@global[0].get_timeout || echo '30')
+RESOLUTION_X=$(uci -q get argon.@global[0].reso_x || echo '2560')
+RESOLUTION_Y=$(uci -q get argon.@global[0].reso_y || echo '1440')
+
+# 10倍宽高比： 宽是高的多少倍，倍数再 * 10, 仅针对pexels API,
+# 例如配置为15, 那么就是判断宽高比是否大于1.5，只有宽高比大于1.5才能被选中
+RESOLUTION_MULTIPLE=15
+
 CACHE=/var/run/argon_${WEB_PIC_SRC}.url
 WRLOCK=/var/lock/argon_${WEB_PIC_SRC}.lock
-CURL_MAXTIME=30
+
+# 图片存储路径, web js 代码会从该路径获取bg
 BACKGROUND_IMG_PATH='/www/luci-static/argon/img/'
-RESOLUTION_X='2560'
-RESOLUTION_Y='1440'
-TRY_MAX=5
 
 # 默认一小时刷新一次
 REFRESH_INTERVAL_SEC=$((1 * 60 * 60))
 
 function fetch_pic_url() {
+
     case ${WEB_PIC_SRC} in
     bing)
         declare picpath
-        picpath=$(curl -fks --max-time ${CURL_MAXTIME} \
+        picpath=$(curl -fks --max-time "${CURL_MAXTIME}" \
             "https://www.bing.com/HPImageArchive.aspx?format=js&n=1&uhd=1" |
             jsonfilter -qe '@.images[0].url')
         [[ -n "${picpath}" ]] && echo "//www.bing.com${picpath}" | sed "s/w=[0-9]*/${RESOLUTION_X}/g" | sed "s/h=[0-9]*/${RESOLUTION_Y}/g"
@@ -32,12 +34,12 @@ function fetch_pic_url() {
     unsplash)
         # fix from https://github.com/sbwml/luci-theme-argon
         if [[ -z "${API_KEY}" ]]; then
-            curl -fks --max-time ${CURL_MAXTIME} \
+            curl -fks --max-time "${CURL_MAXTIME}" \
                 --header "Authorization: Client-ID kmFIroj2ELqXJPtC0XUoyww-Tr_lDU8Ho8uxjptIrCo" \
                 "https://api.unsplash.com/photos/random?count=1&orientation=landscape" |
                 jsonfilter -e "@[0]['urls']['regular']"
         else
-            curl -fks --max-time ${CURL_MAXTIME} \
+            curl -fks --max-time "${CURL_MAXTIME}" \
                 "https://api.unsplash.com/photos/random?client_id=${API_KEY}" |
                 jsonfilter -qe '@["urls"]["regular"]'
         fi
@@ -45,11 +47,11 @@ function fetch_pic_url() {
     unsplash_*)
         local collection_id=${WEB_PIC_SRC#unsplash_}
         if [[ -z "${API_KEY}" ]]; then
-            curl -fks --max-time ${CURL_MAXTIME} \
+            curl -fks --max-time "${CURL_MAXTIME}" \
                 "https://source.unsplash.com/collection/${collection_id}/${RESOLUTION_X}x${RESOLUTION_Y}" |
                 sed -E 's#^.*href="([^?]+)\?.*$#\1?fm=jpg\&fit=crop\&w='"${RESOLUTION_X}"'\&h='"${RESOLUTION_Y}"'#'
         else
-            curl -fks --max-time ${CURL_MAXTIME} \
+            curl -fks --max-time "${CURL_MAXTIME}" \
                 "https://api.unsplash.com/photos/random?client_id=${API_KEY}&collections=${collection_id}" |
                 jsonfilter -qe '@["urls"]["regular"]'
         fi
@@ -57,26 +59,33 @@ function fetch_pic_url() {
     pexels)
         if [[ ! -z "${API_KEY}" ]]; then
             # curl -fks --max-time ${CURL_MAXTIME} -H "Authorization: ${API_KEY}" \
-            #     "https://api.pexels.com/v1/curated?per_page=1" | jsonfilter -qe '@["photos"][0].src.original'
+            #     "https://api.pexels.com/v1/curated?per_page=1" | jsonfilter -qe '@["photos"][0].src.original
 
-            for ((page = 1; page <= TRY_MAX; page++));
+            local result
+            result=$(curl -s --max-time "${CURL_MAXTIME}" -H "Authorization: ${API_KEY}" \
+                "https://api.pexels.com/v1/curated?per_page=80&page=1")
+
+            if [[ "${result}" == "" ]]; then
+                return 
+            fi
+        
+            local per_page
+            per_page=$(echo "${result}" | jsonfilter -qe '@["per_page"]')
+
+            for ((idx = 0; idx < per_page; idx++));
             do
-                local result
-                result=$(curl -s --max-time ${CURL_MAXTIME} -H "Authorization: ${API_KEY}" \
-                    "https://api.pexels.com/v1/curated?per_page=1&page=${page}")
 
-                if [[ "${result}" == "" ]]; then
-                    break;
-                fi
+                local node_filter
+                node_filter='@["photos"]['${idx}']'
 
                 local width 
-                width=$(echo "${result}" | jsonfilter -qe '@["photos"][0].width')
+                width=$(echo "${result}" | jsonfilter -qe "${node_filter}"'.width')
                 if [[ ${width} -lt ${RESOLUTION_X} ]]; then
                     continue
                 fi
 
                 local height
-                height=$(echo "${result}" | jsonfilter -qe '@["photos"][0].height')
+                height=$(echo "${result}" | jsonfilter -qe "${node_filter}"'.height')
                 if [[ ${height} -lt ${RESOLUTION_Y} ]]; then
                     continue
                 fi
@@ -85,7 +94,13 @@ function fetch_pic_url() {
                     continue
                 fi
 
-                echo "${result}" | jsonfilter -qe '@["photos"][0].src.original'
+                if [[ $(( (width * 10) / height )) -lt ${RESOLUTION_MULTIPLE} ]]; then
+                    continue
+                fi
+
+                echo "${result}" | jsonfilter -qe "${node_filter}"'.src.original'
+
+                break;
             done
 
         fi
@@ -103,7 +118,7 @@ function try_update() {
         declare picurl
         picurl=$(fetch_pic_url)
         if [[ "${WEB_PIC_SRC}" == wallhave* ]] ; then
-            curl -fks --max-time ${CURL_MAXTIME} --url "${picurl}" > /dev/null
+            curl -fks --max-time "${CURL_MAXTIME}" --url "${picurl}" > /dev/null
         fi
         if [[ -n "${picurl}" ]]; then
             echo "${picurl}" | tee "${CACHE}"
@@ -114,7 +129,9 @@ function try_update() {
                 touch "${CACHE}"
             fi
         fi
+
         flock -u 200 >/dev/null 2>&1
+
     elif [[ -s "${CACHE}" ]]; then
         cat "${CACHE}"
     fi
@@ -136,7 +153,9 @@ function main() {
 
     if [[ "${img_url}" != "" ]]; then
         rm -rf ${BACKGROUND_IMG_PATH}/bg.jpg
-        curl -fks --max-time ${CURL_MAXTIME} --url "$(echo "${img_url}" | sed 's/^\/\///g')" -o ${BACKGROUND_IMG_PATH}/bg.jpg
+        curl -fks --max-time "${CURL_MAXTIME}" \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            --url "$(echo "${img_url}" | sed 's/^\/\///g')" -o ${BACKGROUND_IMG_PATH}/bg.jpg
     fi
 
     cat "${CACHE}"
