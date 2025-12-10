@@ -8,5 +8,6 @@
 
 LOCK_FILE='/var/run/online_wallpaper_run.lock'
 WORK_SH_FILE='/usr/libexec/argon/online_wallpaper_proc'
+LOG_FILE='/var/log/online_wallpaper.log'
 
-flock "${LOCK_FILE}" "${WORK_SH_FILE}" "${@}"
+flock "${LOCK_FILE}" "${WORK_SH_FILE}" "${@}" 2> ${LOG_FILE}

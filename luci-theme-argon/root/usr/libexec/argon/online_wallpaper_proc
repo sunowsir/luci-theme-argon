@@ -62,7 +62,7 @@ function fetch_pic_url() {
             for ((page = 1; page <= TRY_MAX; page++));
             do
                 local result
-                result=$(curl -fks --max-time ${CURL_MAXTIME} -H "Authorization: ${API_KEY}" \
+                result=$(curl -s --max-time ${CURL_MAXTIME} -H "Authorization: ${API_KEY}" \
                     "https://api.pexels.com/v1/curated?per_page=1&page=${page}")
 
                 if [[ "${result}" == "" ]]; then
@@ -70,13 +70,13 @@ function fetch_pic_url() {
                 fi
 
                 local width 
-                width=$(echo "${result}" | jsonfilter -eq '@["photos"][0].width')
+                width=$(echo "${result}" | jsonfilter -qe '@["photos"][0].width')
                 if [[ ${width} -lt ${RESOLUTION_X} ]]; then
                     continue
                 fi
 
                 local height
-                height=$(echo "${result}" | jsonfilter -eq '@["photos"][0].height')
+                height=$(echo "${result}" | jsonfilter -qe '@["photos"][0].height')
                 if [[ ${height} -lt ${RESOLUTION_Y} ]]; then
                     continue
                 fi
