@@ -103,6 +103,9 @@ function fetch_pic_url() {
     pexels)
         fetch_pic_url_pexels
         ;;
+    picsum)
+        echo 'https://picsum.photos/2560/1440'
+        ;;
     esac
 }
 
@@ -151,7 +154,8 @@ function main() {
 
     if [[ "${img_url}" != "" ]]; then
         rm -rf ${BACKGROUND_IMG_PATH}/bg.jpg
-        curl -fks --max-time "${CURL_MAXTIME}" \
+
+        curl --http1.1 -L -fks --max-time "${CURL_MAXTIME}" \
             -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
             --url "$(echo "${img_url}" | sed 's/^\/\///g')" -o ${BACKGROUND_IMG_PATH}/bg.jpg
     fi
