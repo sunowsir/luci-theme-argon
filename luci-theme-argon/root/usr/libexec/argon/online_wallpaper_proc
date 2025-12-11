@@ -67,6 +67,11 @@ function fetch_pic_url_pexels() {
     return 
 }
 
+function fetch_pic_url_picsum() {
+    curl -s -D - -o /dev/null "https://picsum.photos/${RESOLUTION_X}/${RESOLUTION_Y}" | \
+        grep -i location: | tr -s ' ' | awk '{printf("%s", $2);}'
+}
+
 function fetch_pic_url() {
 
     case ${WEB_PIC_SRC} in
@@ -106,7 +111,7 @@ function fetch_pic_url() {
         fetch_pic_url_pexels
         ;;
     picsum)
-        echo 'https://picsum.photos/2560/1440'
+        fetch_pic_url_picsum
         ;;
     esac
 }
@@ -144,28 +149,44 @@ function get_url() {
     if [[ -f "${CACHE}" ]] && [[ -s "${CACHE}" ]] && 
        [[ -f "${RUNNING_CACHE}" ]] && [[ -s "${RUNNING_CACHE}" ]]; then
         local idle_t=$(($(date '+%s') - $(date -r "${CACHE}" '+%s' 2>/dev/null || echo '0')))
-        if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]] && [[ $(cat "${CACHE}" | tr -d '\n') == $(cat "${RUNNING_CACHE}") ]]; then
+
+    local cache_url="$(cat "${CACHE}" | tr -d '\n' | tr -d '\r')"
+    local running_cache_url="$(cat "${RUNNING_CACHE}" | tr -d '\n' | tr -d '\r')"
+
+        if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]] && [[ "${cache_url}" == "${running_cache_url}" ]]; then
             return
         fi
     fi
     try_update
 }
 
+function img_down() {
+    local img_url
+    img_url="${1}"
+
+    rm -rf ${BACKGROUND_IMG_PATH}/bg.jpg
+
+    curl --http1.1 -L -fks --max-time "${CURL_MAXTIME}" \
+        -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+    --url "${img_url}" \
+    -o "${BACKGROUND_IMG_PATH}/bg.jpg"
+}
+
 function main() {
-    declare img_url
-    img_url="$(get_url)"
+    local img_url 
+    img_url="$(get_url | sed 's/^\/\///g' | tr -d '\r')"
 
     if [[ "${img_url}" != "" ]]; then
-        rm -rf ${BACKGROUND_IMG_PATH}/bg.jpg
-
-        curl --http1.1 -L -fks --max-time "${CURL_MAXTIME}" \
-            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
-            --url "$(echo "${img_url}" | sed 's/^\/\///g')" -o ${BACKGROUND_IMG_PATH}/bg.jpg
-
         echo "${img_url}" > "${RUNNING_CACHE}"
+        img_down "${img_url}"
     fi
 
-    cat "${CACHE}"
+    if [[ ! -f "${BACKGROUND_IMG_PATH}/bg.jpg" ]] || 
+       [[ ! -s "${BACKGROUND_IMG_PATH}/bg.jpg" ]]; then
+        img_down "$(cat ${RUNNING_CACHE} | tr -d '\n')"
+    fi
+
+    cat "${RUNNING_CACHE}"
 }
 
 main "${@}"
