@@ -9,10 +9,10 @@ RESOLUTION_X=$(uci -q get argon.@global[0].reso_x || echo '2560')
 RESOLUTION_Y=$(uci -q get argon.@global[0].reso_y || echo '1440')
 
 # 图片存储路径, web js 代码会从该路径获取bg
-BACKGROUND_IMG_PATH='/www/luci-static/argon/img/'
+BACKGROUND_IMG_FPATH='/www/luci-static/argon/img/bg.jpg'
 
 CACHE=/var/run/argon_${WEB_PIC_SRC}.url
-RUNNING_CACHE=${BACKGROUND_IMG_PATH}/argon_bg.url
+RUNNING_CACHE=/var/run/argon_running_bg.url
 
 WRLOCK=/var/lock/argon_${WEB_PIC_SRC}.lock
 
@@ -27,7 +27,6 @@ function fetch_pic_url_pexels() {
     local result
     result=$(curl -s --max-time "${CURL_MAXTIME}" -H "Authorization: ${API_KEY}" \
         "https://api.pexels.com/v1/curated?per_page=80&page=1")
-
 
     if [[ "${result}" == "" ]]; then
         return 
@@ -118,31 +117,31 @@ function fetch_pic_url() {
 
 function try_update() {
     local lock="${WRLOCK}"
-    exec 200>"${lock}"
-
-    rm -rf "${CACHE}"
+    exec 200> "${lock}"
 
     if flock -n 200 >/dev/null 2>&1; then
-        declare picurl
-        picurl=$(fetch_pic_url)
-        if [[ "${WEB_PIC_SRC}" == wallhave* ]] ; then
-            curl -fks --max-time "${CURL_MAXTIME}" --url "${picurl}" > /dev/null
-        fi
+        local picurl
+        picurl="$(fetch_pic_url | tr -d '\r')"
+
+        # url 非空 优先用url
         if [[ -n "${picurl}" ]]; then
+            rm -rf "${CACHE}"
             echo "${picurl}" | tee "${CACHE}"
-        else
-            if [[ -s "$CACHE" ]]; then
-                cat "${CACHE}"
-            else
-                touch "${CACHE}"
-            fi
+
+            flock -u 200 >/dev/null 2>&1
+            return 
         fi
 
+        # url 为空, 退出判断分支, 解锁
         flock -u 200 >/dev/null 2>&1
+    fi
 
-    elif [[ -s "${CACHE}" ]]; then
+    # 加锁失败或url获取失败，直接取cache
+    if [[ -s "${CACHE}" ]]; then 
         cat "${CACHE}"
     fi
+
+    return 
 }
 
 function get_url() {
@@ -150,13 +149,20 @@ function get_url() {
        [[ -f "${RUNNING_CACHE}" ]] && [[ -s "${RUNNING_CACHE}" ]]; then
         local idle_t=$(($(date '+%s') - $(date -r "${CACHE}" '+%s' 2>/dev/null || echo '0')))
 
-    local cache_url="$(cat "${CACHE}" | tr -d '\n' | tr -d '\r')"
-    local running_cache_url="$(cat "${RUNNING_CACHE}" | tr -d '\n' | tr -d '\r')"
+        # 获取URL后，第一时间保存到该cache文件中
+        local cache_url
+        cache_url=$(cat "${CACHE}" | tr -d '\n' | tr -d '\r')
 
-        if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]] && [[ "${cache_url}" == "${running_cache_url}" ]]; then
+        # 脚本执行到最后，将最终生效URL保存到 running cache 文件中
+        local running_cache_url
+        running_cache_url=$(cat "${RUNNING_CACHE}" | tr -d '\n' | tr -d '\r')
+
+        if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]] && 
+           [[ "${cache_url}" == "${running_cache_url}" ]]; then
             return
         fi
     fi
+
     try_update
 }
 
@@ -164,26 +170,28 @@ function img_down() {
     local img_url
     img_url="${1}"
 
-    rm -rf ${BACKGROUND_IMG_PATH}/bg.jpg
+    rm -rf "${BACKGROUND_IMG_FPATH}"
 
     curl --http1.1 -L -fks --max-time "${CURL_MAXTIME}" \
         -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
     --url "${img_url}" \
-    -o "${BACKGROUND_IMG_PATH}/bg.jpg"
+    -o "${BACKGROUND_IMG_FPATH}"
 }
 
 function main() {
     local img_url 
-    img_url="$(get_url | sed 's/^\/\///g' | tr -d '\r')"
+    img_url="$(get_url | sed 's/^\/\///g')"
 
+    # 获取URL成功，写入URL到running cache 文件中, 并下载图片, 提高web响应速度
     if [[ "${img_url}" != "" ]]; then
         echo "${img_url}" > "${RUNNING_CACHE}"
         img_down "${img_url}"
     fi
 
-    if [[ ! -f "${BACKGROUND_IMG_PATH}/bg.jpg" ]] || 
-       [[ ! -s "${BACKGROUND_IMG_PATH}/bg.jpg" ]]; then
-        img_down "$(cat ${RUNNING_CACHE} | tr -d '\n')"
+    # 下载的背景图不存在，则无论如何都尝试下载
+    if [[ ! -f "${BACKGROUND_IMG_FPATH}" ]] || 
+       [[ ! -s "${BACKGROUND_IMG_FPATH}" ]]; then
+        img_down "$(cat ${RUNNING_CACHE} | tr -d '\r' | tr -d '\n')"
     fi
 
     cat "${RUNNING_CACHE}"
