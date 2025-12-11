@@ -8,10 +8,6 @@ CURL_MAXTIME=$(uci -q get argon.@global[0].get_timeout || echo '30')
 RESOLUTION_X=$(uci -q get argon.@global[0].reso_x || echo '2560')
 RESOLUTION_Y=$(uci -q get argon.@global[0].reso_y || echo '1440')
 
-# 10倍宽高比： 宽是高的多少倍，倍数再 * 10, 仅针对pexels API,
-# 例如配置为15, 那么就是判断宽高比是否大于1.5，只有宽高比大于1.5才能被选中
-RESOLUTION_MULTIPLE=15
-
 CACHE=/var/run/argon_${WEB_PIC_SRC}.url
 WRLOCK=/var/lock/argon_${WEB_PIC_SRC}.lock
 
@@ -20,6 +16,54 @@ BACKGROUND_IMG_PATH='/www/luci-static/argon/img/'
 
 # 默认一小时刷新一次
 REFRESH_INTERVAL_SEC=$((1 * 60 * 60))
+
+function fetch_pic_url_pexels() {
+    if [[ -z "${API_KEY}" ]]; then
+        return 
+    fi
+
+    local result
+    result=$(curl -s --max-time "${CURL_MAXTIME}" -H "Authorization: ${API_KEY}" \
+        "https://api.pexels.com/v1/curated?per_page=80&page=1")
+
+
+    if [[ "${result}" == "" ]]; then
+        return 
+    fi
+
+    local per_page
+    per_page=$(echo "${result}" | jsonfilter -qe '@["per_page"]')
+
+    for ((idx = 0; idx < per_page; idx++));
+    do
+        local random_idx=$((RANDOM % RANDOM % per_page))
+
+        local node_filter
+        node_filter='@["photos"]['${random_idx}']'
+
+        local width 
+        width=$(echo "${result}" | jsonfilter -qe "${node_filter}"'.width')
+        if [[ ${width} -lt ${RESOLUTION_X} ]]; then
+            continue
+        fi
+
+        local height
+        height=$(echo "${result}" | jsonfilter -qe "${node_filter}"'.height')
+        if [[ ${height} -lt ${RESOLUTION_Y} ]]; then
+            continue
+        fi
+
+        if [[ ${width} -lt ${height} ]]; then
+            continue
+        fi
+
+        echo "${result}" | jsonfilter -qe "${node_filter}"'.src.original'
+
+        break;
+    done
+
+    return 
+}
 
 function fetch_pic_url() {
 
@@ -57,53 +101,7 @@ function fetch_pic_url() {
         fi
         ;;
     pexels)
-        if [[ ! -z "${API_KEY}" ]]; then
-            # curl -fks --max-time ${CURL_MAXTIME} -H "Authorization: ${API_KEY}" \
-            #     "https://api.pexels.com/v1/curated?per_page=1" | jsonfilter -qe '@["photos"][0].src.original
-
-            local result
-            result=$(curl -s --max-time "${CURL_MAXTIME}" -H "Authorization: ${API_KEY}" \
-                "https://api.pexels.com/v1/curated?per_page=80&page=1")
-
-            if [[ "${result}" == "" ]]; then
-                return 
-            fi
-        
-            local per_page
-            per_page=$(echo "${result}" | jsonfilter -qe '@["per_page"]')
-
-            for ((idx = 0; idx < per_page; idx++));
-            do
-
-                local node_filter
-                node_filter='@["photos"]['${idx}']'
-
-                local width 
-                width=$(echo "${result}" | jsonfilter -qe "${node_filter}"'.width')
-                if [[ ${width} -lt ${RESOLUTION_X} ]]; then
-                    continue
-                fi
-
-                local height
-                height=$(echo "${result}" | jsonfilter -qe "${node_filter}"'.height')
-                if [[ ${height} -lt ${RESOLUTION_Y} ]]; then
-                    continue
-                fi
-
-                if [[ ${width} -lt ${height} ]]; then
-                    continue
-                fi
-
-                if [[ $(( (width * 10) / height )) -lt ${RESOLUTION_MULTIPLE} ]]; then
-                    continue
-                fi
-
-                echo "${result}" | jsonfilter -qe "${node_filter}"'.src.original'
-
-                break;
-            done
-
-        fi
+        fetch_pic_url_pexels
         ;;
     esac
 }
