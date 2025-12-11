@@ -8,11 +8,13 @@ CURL_MAXTIME=$(uci -q get argon.@global[0].get_timeout || echo '30')
 RESOLUTION_X=$(uci -q get argon.@global[0].reso_x || echo '2560')
 RESOLUTION_Y=$(uci -q get argon.@global[0].reso_y || echo '1440')
 
-CACHE=/var/run/argon_${WEB_PIC_SRC}.url
-WRLOCK=/var/lock/argon_${WEB_PIC_SRC}.lock
-
 # 图片存储路径, web js 代码会从该路径获取bg
 BACKGROUND_IMG_PATH='/www/luci-static/argon/img/'
+
+CACHE=/var/run/argon_${WEB_PIC_SRC}.url
+RUNNING_CACHE=${BACKGROUND_IMG_PATH}/argon_bg.url
+
+WRLOCK=/var/lock/argon_${WEB_PIC_SRC}.lock
 
 # 默认一小时刷新一次
 REFRESH_INTERVAL_SEC=$((1 * 60 * 60))
@@ -139,9 +141,10 @@ function try_update() {
 }
 
 function get_url() {
-    if [[ -f "${CACHE}" ]] && [[ -s "${CACHE}" ]]; then
+    if [[ -f "${CACHE}" ]] && [[ -s "${CACHE}" ]] && 
+       [[ -f "${RUNNING_CACHE}" ]] && [[ -s "${RUNNING_CACHE}" ]]; then
         local idle_t=$(($(date '+%s') - $(date -r "${CACHE}" '+%s' 2>/dev/null || echo '0')))
-        if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]]; then
+        if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]] && [[ $(cat "${CACHE}" | tr -d '\n') == $(cat "${RUNNING_CACHE}") ]]; then
             return
         fi
     fi
@@ -158,6 +161,8 @@ function main() {
         curl --http1.1 -L -fks --max-time "${CURL_MAXTIME}" \
             -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
             --url "$(echo "${img_url}" | sed 's/^\/\///g')" -o ${BACKGROUND_IMG_PATH}/bg.jpg
+
+        echo "${img_url}" > "${RUNNING_CACHE}"
     fi
 
     cat "${CACHE}"
