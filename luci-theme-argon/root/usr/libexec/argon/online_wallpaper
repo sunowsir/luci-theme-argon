@@ -6,8 +6,8 @@
 #	* Github   : github.com/sunowsir
 #	* Creation : 2025年07月31日 星期四 00时48分25秒
 
-LOCK_FILE='/var/run/online_wallpaper_run.lock'
-WORK_SH_FILE='/usr/libexec/argon/online_wallpaper_proc'
-WORK_LOGS='/var/log/online_wallpaper_run.log'
+G_LOCK_FILE='/var/run/online_wallpaper.lock'
+G_WORK_SH_FILE='/usr/libexec/argon/online_wallpaper_proc'
+G_WORK_LOGS='/var/log/online_wallpaper.log'
 
-flock "${LOCK_FILE}" /bin/bash -x "${WORK_SH_FILE}" "${@}" > ${WORK_LOGS} 2>&1 
+flock "${G_LOCK_FILE}" /bin/bash -x "${G_WORK_SH_FILE}" "${@}" > ${G_WORK_LOGS} 2>&1 

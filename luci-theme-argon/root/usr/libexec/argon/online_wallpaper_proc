@@ -2,33 +2,36 @@
 # author jjm2473
 # modify author sun.wang fork to https://github.com/sunowsir/luci-theme-argon
 
-WEB_PIC_SRC=$(uci -q get argon.@global[0].online_wallpaper || echo 'bing')
-API_KEY=$(uci -q get argon.@global[0].use_api_key)
-CURL_MAXTIME=$(uci -q get argon.@global[0].get_timeout || echo '30')
-RESOLUTION_X=$(uci -q get argon.@global[0].reso_x || echo '2560')
-RESOLUTION_Y=$(uci -q get argon.@global[0].reso_y || echo '1440')
+date +"%Y-%m-%d %H:%M:%S"
+
+G_WEB_PIC_SRC=$(uci -q get argon.@global[0].online_wallpaper || echo 'bing')
+G_API_KEY=$(uci -q get argon.@global[0].use_api_key)
+G_CURL_MAXTIME=$(uci -q get argon.@global[0].get_timeout || echo '30')
+G_RESOLUTION_X=$(uci -q get argon.@global[0].reso_x || echo '2560')
+G_RESOLUTION_Y=$(uci -q get argon.@global[0].reso_y || echo '1440')
 
 # 图片存储路径, web js 代码会从该路径获取bg
-BACKGROUND_IMG_FPATH='/www/luci-static/argon/img/bg.jpg'
+G_BACKGROUND_IMG_FPATH='/www/luci-static/argon/img/bg.jpg'
 
 # 最新URL缓存
-CACHE=/var/run/argon_${WEB_PIC_SRC}.url
+G_CACHE="/var/run/argon_${G_WEB_PIC_SRC}.url"
 
 # 运行时URL缓存
-RUNNING_CACHE=/var/run/argon_running_bg.url
+G_RUNNING_CACHE='/var/run/argon_running_bg.url'
 
 # 锁文件
-WRLOCK=/var/lock/argon_${WEB_PIC_SRC}.lock
+G_WRLOCK='/var/run/online_wallpaper_proc.lock'
 
 # 默认一小时刷新一次
-REFRESH_INTERVAL_SEC=$((1 * 60 * 60))
+G_REFRESH_INTERVAL_SEC=$((1 * 60 * 60))
 
+# 全局图片URL存储
 G_IMG_URL=''
 
 
 function fetch_pic_url_bing() {
     local picpath
-    picpath=$(curl -fks --max-time "${CURL_MAXTIME}" \
+    picpath=$(curl -fks --max-time "${G_CURL_MAXTIME}" \
         "https://www.bing.com/HPImageArchive.aspx?format=js&n=1&uhd=1" | \
         jsonfilter -qe '@.images[0].url')
 
@@ -36,19 +39,19 @@ function fetch_pic_url_bing() {
         return 127
     fi
 
-    G_IMG_URL="$(echo "//www.bing.com${picpath}" | sed "s/w=[0-9]*/${RESOLUTION_X}/g" | \
-        sed "s/h=[0-9]*/${RESOLUTION_Y}/g" | tr -d '\r' | tr -d '\n')"
+    G_IMG_URL="$(echo "//www.bing.com${picpath}" | sed "s/w=[0-9]*/${G_RESOLUTION_X}/g" | \
+        sed "s/h=[0-9]*/${G_RESOLUTION_Y}/g" | tr -d '\r' | tr -d '\n' | sed 's/^\/\///g' )"
 
     return $?
 }
 
 function fetch_pic_url_unsplash() {
-    if [[ -n "${API_KEY}" ]]; then
-        G_IMG_URL="$(curl -fks --max-time "${CURL_MAXTIME}" \
-            "https://api.unsplash.com/photos/random?client_id=${API_KEY}" | \
+    if [[ -n "${G_API_KEY}" ]]; then
+        G_IMG_URL="$(curl -fks --max-time "${G_CURL_MAXTIME}" \
+            "https://api.unsplash.com/photos/random?client_id=${G_API_KEY}" | \
             jsonfilter -qe '@["urls"]["regular"]' | tr -d '\r' | tr -d '\n')"
     else
-        G_IMG_URL="$(curl -fks --max-time "${CURL_MAXTIME}" \
+        G_IMG_URL="$(curl -fks --max-time "${G_CURL_MAXTIME}" \
             --header "Authorization: Client-ID kmFIroj2ELqXJPtC0XUoyww-Tr_lDU8Ho8uxjptIrCo" \
             "https://api.unsplash.com/photos/random?count=1&orientation=landscape" | \
             jsonfilter -e "@[0]['urls']['regular']" | tr -d '\r' | tr -d '\n')"
@@ -62,12 +65,12 @@ function fetch_pic_url_unsplash() {
 }
 
 function fetch_pic_url_pexels() {
-    if [[ -z "${API_KEY}" ]]; then
+    if [[ -z "${G_API_KEY}" ]]; then
         return 
     fi
 
     local result
-    result=$(curl -s --max-time "${CURL_MAXTIME}" -H "Authorization: ${API_KEY}" \
+    result=$(curl -s --max-time "${G_CURL_MAXTIME}" -H "Authorization: ${G_API_KEY}" \
         "https://api.pexels.com/v1/curated?per_page=80&page=1")
 
     if [[ "${result}" == "" ]]; then
@@ -86,13 +89,13 @@ function fetch_pic_url_pexels() {
 
         local width 
         width=$(echo "${result}" | jsonfilter -qe "${node_filter}"'.width')
-        if [[ ${width} -lt ${RESOLUTION_X} ]]; then
+        if [[ ${width} -lt ${G_RESOLUTION_X} ]]; then
             continue
         fi
 
         local height
         height=$(echo "${result}" | jsonfilter -qe "${node_filter}"'.height')
-        if [[ ${height} -lt ${RESOLUTION_Y} ]]; then
+        if [[ ${height} -lt ${G_RESOLUTION_Y} ]]; then
             continue
         fi
 
@@ -109,13 +112,13 @@ function fetch_pic_url_pexels() {
 }
 
 function fetch_pic_url_picsum() {
-    G_IMG_URL="$(curl -s -D - -o /dev/null "https://picsum.photos/${RESOLUTION_X}/${RESOLUTION_Y}" | \
+    G_IMG_URL="$(curl -s -D - -o /dev/null "https://picsum.photos/${G_RESOLUTION_X}/${G_RESOLUTION_Y}" | \
         grep -i location: | tr -s ' ' | awk '{printf("%s", $2);}' | tr -d '\r' | tr -d '\n')"
     return $?
 }
 
 function fetch_pic_url() {
-    case ${WEB_PIC_SRC} in
+    case ${G_WEB_PIC_SRC} in
     bing)
         fetch_pic_url_bing
         ;;
@@ -134,7 +137,7 @@ function fetch_pic_url() {
 }
 
 function try_update() {
-    local lock="${WRLOCK}"
+    local lock="${G_WRLOCK}"
     exec 200> "${lock}"
 
     if flock -n 200 >/dev/null 2>&1; then
@@ -142,7 +145,7 @@ function try_update() {
 
         # url 非空 优先用url
         if [[ -n "${G_IMG_URL}" ]]; then
-            echo -n "${G_IMG_URL}" > "${CACHE}"
+            echo -n "${G_IMG_URL}" > "${G_CACHE}"
 
             flock -u 200 >/dev/null 2>&1
             return $?
@@ -153,27 +156,27 @@ function try_update() {
     fi
 
     # 加锁失败或url获取失败，直接取cache
-    if [[ -s "${CACHE}" ]]; then 
-        G_IMG_URL=$(cat "${CACHE}")
+    if [[ -s "${G_CACHE}" ]]; then 
+        G_IMG_URL=$(cat "${G_CACHE}")
     fi
 
     return 127
 }
 
 function get_url() {
-    if [[ -s "${CACHE}" ]] && [[ -s "${RUNNING_CACHE}" ]]; then
-        local idle_t=$(($(date '+%s') - $(date -r "${CACHE}" '+%s' 2>/dev/null || echo '0')))
+    if [[ -s "${G_CACHE}" ]] && [[ -s "${G_RUNNING_CACHE}" ]]; then
+        local idle_t=$(($(date '+%s') - $(date -r "${G_CACHE}" '+%s' 2>/dev/null || echo '0')))
 
         # 获取URL后，第一时间保存到该cache文件中
         local cache_url
-        cache_url=$(cat "${CACHE}" | tr -d '\n' | tr -d '\r')
+        cache_url=$(cat "${G_CACHE}" | tr -d '\n' | tr -d '\r')
 
         # 脚本执行到最后，将最终生效URL保存到 running cache 文件中
         local running_cache_url
-        running_cache_url=$(cat "${RUNNING_CACHE}" | tr -d '\n' | tr -d '\r')
+        running_cache_url=$(cat "${G_RUNNING_CACHE}" | tr -d '\n' | tr -d '\r')
 
         # 未到刷新时间或缓存url与运行时url一致，则无需更新url
-        if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]] && 
+        if [[ ${idle_t} -le ${G_REFRESH_INTERVAL_SEC} ]] && 
            [[ "${cache_url}" == "${running_cache_url}" ]]; then
             G_IMG_URL=''
             return $?
@@ -188,12 +191,12 @@ function img_down() {
     local img_url
     img_url="${1}"
 
-    rm -rf "${BACKGROUND_IMG_FPATH}"
+    rm -rf "${G_BACKGROUND_IMG_FPATH}"
 
-    curl --http1.1 -L -fks --max-time "${CURL_MAXTIME}" \
+    curl --http1.1 -L -fks --max-time "${G_CURL_MAXTIME}" \
         -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
     --url "${img_url}" \
-    -o "${BACKGROUND_IMG_FPATH}"
+    -o "${G_BACKGROUND_IMG_FPATH}"
 
     return $?
 }
@@ -203,13 +206,13 @@ function main() {
 
     # 获取URL成功，写入URL到running cache 文件中, 并下载图片, 提高web响应速度
     if [[ -n "${G_IMG_URL}" ]]; then
-        echo -n "${G_IMG_URL}" > "${RUNNING_CACHE}"
+        echo -n "${G_IMG_URL}" > "${G_RUNNING_CACHE}"
         img_down "${G_IMG_URL}"
     fi
 
     # 下载的背景图不存在，则无论如何都尝试下载
-    if [[ ! -s "${BACKGROUND_IMG_FPATH}" ]]; then
-        img_down "$(cat ${RUNNING_CACHE} | tr -d '\r' | tr -d '\n')"
+    if [[ ! -s "${G_BACKGROUND_IMG_FPATH}" ]]; then
+        img_down "$(cat ${G_RUNNING_CACHE} | tr -d '\r' | tr -d '\n')"
     fi
 
     return $?
@@ -217,4 +220,5 @@ function main() {
 
 main "${@}"
 exit $?
+
 
