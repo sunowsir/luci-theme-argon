@@ -10,4 +10,4 @@ LOCK_FILE='/var/run/online_wallpaper_run.lock'
 WORK_SH_FILE='/usr/libexec/argon/online_wallpaper_proc'
 WORK_LOGS='/var/log/online_wallpaper_run.log'
 
-flock "${LOCK_FILE}" "${WORK_SH_FILE}" "${@}" > ${WORK_LOGS} 2>&1 
+flock "${LOCK_FILE}" /bin/bash -x "${WORK_SH_FILE}" "${@}" > ${WORK_LOGS} 2>&1 

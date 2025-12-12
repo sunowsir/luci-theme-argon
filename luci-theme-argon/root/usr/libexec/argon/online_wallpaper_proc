@@ -33,13 +33,13 @@ function fetch_pic_url_bing() {
         jsonfilter -qe '@.images[0].url')
 
     if [[ ! -n "${picpath}" ]]; then
-        return 
+        return 127
     fi
 
     G_IMG_URL="$(echo "//www.bing.com${picpath}" | sed "s/w=[0-9]*/${RESOLUTION_X}/g" | \
         sed "s/h=[0-9]*/${RESOLUTION_Y}/g" | tr -d '\r' | tr -d '\n')"
 
-    return 
+    return $?
 }
 
 function fetch_pic_url_unsplash() {
@@ -54,7 +54,11 @@ function fetch_pic_url_unsplash() {
             jsonfilter -e "@[0]['urls']['regular']" | tr -d '\r' | tr -d '\n')"
     fi
 
-    return 
+    if [[ -n "${G_IMG_URL}" ]]; then
+        return 127
+    fi
+
+    return $?
 }
 
 function fetch_pic_url_pexels() {
@@ -67,7 +71,7 @@ function fetch_pic_url_pexels() {
         "https://api.pexels.com/v1/curated?per_page=80&page=1")
 
     if [[ "${result}" == "" ]]; then
-        return 
+        return 127
     fi
 
     local per_page
@@ -101,12 +105,13 @@ function fetch_pic_url_pexels() {
         break;
     done
 
-    return 
+    return $?
 }
 
 function fetch_pic_url_picsum() {
     G_IMG_URL="$(curl -s -D - -o /dev/null "https://picsum.photos/${RESOLUTION_X}/${RESOLUTION_Y}" | \
         grep -i location: | tr -s ' ' | awk '{printf("%s", $2);}' | tr -d '\r' | tr -d '\n')"
+    return $?
 }
 
 function fetch_pic_url() {
@@ -124,6 +129,8 @@ function fetch_pic_url() {
         fetch_pic_url_picsum
         ;;
     esac
+
+    return $?
 }
 
 function try_update() {
@@ -138,7 +145,7 @@ function try_update() {
             echo -n "${G_IMG_URL}" > "${CACHE}"
 
             flock -u 200 >/dev/null 2>&1
-            return 
+            return $?
         fi
 
         # url 为空, 退出判断分支, 解锁
@@ -150,12 +157,12 @@ function try_update() {
         G_IMG_URL=$(cat "${CACHE}")
     fi
 
-    return 
+    return 127
 }
 
 function get_url() {
-    if [[ -f "${CACHE}" ]] && [[ -s "${CACHE}" ]] && 
-       [[ -f "${RUNNING_CACHE}" ]] && [[ -s "${RUNNING_CACHE}" ]]; then
+    if [[ -s "${CACHE}" ]] && 
+       [[ -s "${RUNNING_CACHE}" ]]; then
         local idle_t=$(($(date '+%s') - $(date -r "${CACHE}" '+%s' 2>/dev/null || echo '0')))
 
         # 获取URL后，第一时间保存到该cache文件中
@@ -170,11 +177,12 @@ function get_url() {
         if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]] && 
            [[ "${cache_url}" == "${running_cache_url}" ]]; then
             G_IMG_URL=''
-            return
+            return $?
         fi
     fi
 
     try_update
+    return $?
 }
 
 function img_down() {
@@ -187,6 +195,8 @@ function img_down() {
         -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
     --url "${img_url}" \
     -o "${BACKGROUND_IMG_FPATH}"
+
+    return $?
 }
 
 function main() {
@@ -199,12 +209,11 @@ function main() {
     fi
 
     # 下载的背景图不存在，则无论如何都尝试下载
-    if [[ ! -f "${BACKGROUND_IMG_FPATH}" ]] || 
-       [[ ! -s "${BACKGROUND_IMG_FPATH}" ]]; then
+    if [[ ! -s "${BACKGROUND_IMG_FPATH}" ]]; then
         img_down "$(cat ${RUNNING_CACHE} | tr -d '\r' | tr -d '\n')"
     fi
 
-    cat "${RUNNING_CACHE}"
+    return $?
 }
 
 main "${@}"
