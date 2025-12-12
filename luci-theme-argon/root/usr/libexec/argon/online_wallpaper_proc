@@ -11,13 +11,51 @@ RESOLUTION_Y=$(uci -q get argon.@global[0].reso_y || echo '1440')
 # 图片存储路径, web js 代码会从该路径获取bg
 BACKGROUND_IMG_FPATH='/www/luci-static/argon/img/bg.jpg'
 
+# 最新URL缓存
 CACHE=/var/run/argon_${WEB_PIC_SRC}.url
+
+# 运行时URL缓存
 RUNNING_CACHE=/var/run/argon_running_bg.url
 
+# 锁文件
 WRLOCK=/var/lock/argon_${WEB_PIC_SRC}.lock
 
 # 默认一小时刷新一次
 REFRESH_INTERVAL_SEC=$((1 * 60 * 60))
+
+G_IMG_URL=''
+
+
+function fetch_pic_url_bing() {
+    local picpath
+    picpath=$(curl -fks --max-time "${CURL_MAXTIME}" \
+        "https://www.bing.com/HPImageArchive.aspx?format=js&n=1&uhd=1" | \
+        jsonfilter -qe '@.images[0].url')
+
+    if [[ ! -n "${picpath}" ]]; then
+        return 
+    fi
+
+    G_IMG_URL="$(echo "//www.bing.com${picpath}" | sed "s/w=[0-9]*/${RESOLUTION_X}/g" | \
+        sed "s/h=[0-9]*/${RESOLUTION_Y}/g" | tr -d '\r' | tr -d '\n')"
+
+    return 
+}
+
+function fetch_pic_url_unsplash() {
+    if [[ -n "${API_KEY}" ]]; then
+        G_IMG_URL="$(curl -fks --max-time "${CURL_MAXTIME}" \
+            "https://api.unsplash.com/photos/random?client_id=${API_KEY}" | \
+            jsonfilter -qe '@["urls"]["regular"]' | tr -d '\r' | tr -d '\n')"
+    else
+        G_IMG_URL="$(curl -fks --max-time "${CURL_MAXTIME}" \
+            --header "Authorization: Client-ID kmFIroj2ELqXJPtC0XUoyww-Tr_lDU8Ho8uxjptIrCo" \
+            "https://api.unsplash.com/photos/random?count=1&orientation=landscape" | \
+            jsonfilter -e "@[0]['urls']['regular']" | tr -d '\r' | tr -d '\n')"
+    fi
+
+    return 
+}
 
 function fetch_pic_url_pexels() {
     if [[ -z "${API_KEY}" ]]; then
@@ -58,7 +96,7 @@ function fetch_pic_url_pexels() {
             continue
         fi
 
-        echo "${result}" | jsonfilter -qe "${node_filter}"'.src.original'
+        G_IMG_URL="$(echo "${result}" | jsonfilter -qe "${node_filter}"'.src.original' | tr -d '\r' | tr -d '\n')"
 
         break;
     done
@@ -67,44 +105,17 @@ function fetch_pic_url_pexels() {
 }
 
 function fetch_pic_url_picsum() {
-    curl -s -D - -o /dev/null "https://picsum.photos/${RESOLUTION_X}/${RESOLUTION_Y}" | \
-        grep -i location: | tr -s ' ' | awk '{printf("%s", $2);}'
+    G_IMG_URL="$(curl -s -D - -o /dev/null "https://picsum.photos/${RESOLUTION_X}/${RESOLUTION_Y}" | \
+        grep -i location: | tr -s ' ' | awk '{printf("%s", $2);}' | tr -d '\r' | tr -d '\n')"
 }
 
 function fetch_pic_url() {
-
     case ${WEB_PIC_SRC} in
     bing)
-        declare picpath
-        picpath=$(curl -fks --max-time "${CURL_MAXTIME}" \
-            "https://www.bing.com/HPImageArchive.aspx?format=js&n=1&uhd=1" |
-            jsonfilter -qe '@.images[0].url')
-        [[ -n "${picpath}" ]] && echo "//www.bing.com${picpath}" | sed "s/w=[0-9]*/${RESOLUTION_X}/g" | sed "s/h=[0-9]*/${RESOLUTION_Y}/g"
+        fetch_pic_url_bing
         ;;
     unsplash)
-        # fix from https://github.com/sbwml/luci-theme-argon
-        if [[ -z "${API_KEY}" ]]; then
-            curl -fks --max-time "${CURL_MAXTIME}" \
-                --header "Authorization: Client-ID kmFIroj2ELqXJPtC0XUoyww-Tr_lDU8Ho8uxjptIrCo" \
-                "https://api.unsplash.com/photos/random?count=1&orientation=landscape" |
-                jsonfilter -e "@[0]['urls']['regular']"
-        else
-            curl -fks --max-time "${CURL_MAXTIME}" \
-                "https://api.unsplash.com/photos/random?client_id=${API_KEY}" |
-                jsonfilter -qe '@["urls"]["regular"]'
-        fi
-        ;;
-    unsplash_*)
-        local collection_id=${WEB_PIC_SRC#unsplash_}
-        if [[ -z "${API_KEY}" ]]; then
-            curl -fks --max-time "${CURL_MAXTIME}" \
-                "https://source.unsplash.com/collection/${collection_id}/${RESOLUTION_X}x${RESOLUTION_Y}" |
-                sed -E 's#^.*href="([^?]+)\?.*$#\1?fm=jpg\&fit=crop\&w='"${RESOLUTION_X}"'\&h='"${RESOLUTION_Y}"'#'
-        else
-            curl -fks --max-time "${CURL_MAXTIME}" \
-                "https://api.unsplash.com/photos/random?client_id=${API_KEY}&collections=${collection_id}" |
-                jsonfilter -qe '@["urls"]["regular"]'
-        fi
+        fetch_pic_url_unsplash
         ;;
     pexels)
         fetch_pic_url_pexels
@@ -120,13 +131,11 @@ function try_update() {
     exec 200> "${lock}"
 
     if flock -n 200 >/dev/null 2>&1; then
-        local picurl
-        picurl="$(fetch_pic_url | tr -d '\r')"
+        fetch_pic_url
 
         # url 非空 优先用url
-        if [[ -n "${picurl}" ]]; then
-            rm -rf "${CACHE}"
-            echo "${picurl}" | tee "${CACHE}"
+        if [[ -n "${G_IMG_URL}" ]]; then
+            echo -n "${G_IMG_URL}" > "${CACHE}"
 
             flock -u 200 >/dev/null 2>&1
             return 
@@ -138,7 +147,7 @@ function try_update() {
 
     # 加锁失败或url获取失败，直接取cache
     if [[ -s "${CACHE}" ]]; then 
-        cat "${CACHE}"
+        G_IMG_URL=$(cat "${CACHE}")
     fi
 
     return 
@@ -157,8 +166,10 @@ function get_url() {
         local running_cache_url
         running_cache_url=$(cat "${RUNNING_CACHE}" | tr -d '\n' | tr -d '\r')
 
+        # 未到刷新时间或缓存url与运行时url一致，则无需更新url
         if [[ ${idle_t} -le ${REFRESH_INTERVAL_SEC} ]] && 
            [[ "${cache_url}" == "${running_cache_url}" ]]; then
+            G_IMG_URL=''
             return
         fi
     fi
@@ -179,13 +190,12 @@ function img_down() {
 }
 
 function main() {
-    local img_url 
-    img_url="$(get_url | sed 's/^\/\///g')"
+    get_url
 
     # 获取URL成功，写入URL到running cache 文件中, 并下载图片, 提高web响应速度
-    if [[ "${img_url}" != "" ]]; then
-        echo "${img_url}" > "${RUNNING_CACHE}"
-        img_down "${img_url}"
+    if [[ -n "${G_IMG_URL}" ]]; then
+        echo -n "${G_IMG_URL}" > "${RUNNING_CACHE}"
+        img_down "${G_IMG_URL}"
     fi
 
     # 下载的背景图不存在，则无论如何都尝试下载

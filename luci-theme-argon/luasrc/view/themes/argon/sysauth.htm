@@ -74,9 +74,9 @@
         if fs.access("/etc/config/argon") then
             local online_wallpaper = uci:get_first('argon', 'global', 'online_wallpaper') or (uci:get_first('argon', 'global', 'bing_background') == '1' and 'bing')
             if (online_wallpaper and online_wallpaper ~= "none") then
-                local picurl = sys.exec("/usr/libexec/argon/online_wallpaper")
-                if (picurl and picurl ~= '') then
-                    picpath = media .. "/img/bg.jpg"
+                sys.exec("/usr/libexec/argon/online_wallpaper")
+                local picpath = media .. "/img/bg.jpg"
+                if fs.stat("/www" .. picpath) then
                     return picpath, "Image", ""
                 end
             end
