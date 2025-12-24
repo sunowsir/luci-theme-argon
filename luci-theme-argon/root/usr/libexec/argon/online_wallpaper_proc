@@ -112,7 +112,7 @@ function fetch_pic_url_pexels() {
 }
 
 function fetch_pic_url_picsum() {
-    G_IMG_URL="$(curl -s -D - -o /dev/null "https://picsum.photos/${G_RESOLUTION_X}/${G_RESOLUTION_Y}" | \
+    G_IMG_URL="$(curl --max-time "${G_CURL_MAXTIME}" -s -D - -o /dev/null "https://picsum.photos/${G_RESOLUTION_X}/${G_RESOLUTION_Y}" | \
         grep -i location: | tr -s ' ' | awk '{printf("%s", $2);}' | tr -d '\r' | tr -d '\n')"
     return $?
 }
