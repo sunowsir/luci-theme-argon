@@ -4939,6 +4939,9 @@ div[style*="width:100%"] {
 .progress_bar_bg {
   background: transparent !important;
 }
+.oc .subscription-progress-bar {
+  background: transparent !important;
+}
 .oc .sub-card {
   background-color: var(--background-color) !important;
 }
