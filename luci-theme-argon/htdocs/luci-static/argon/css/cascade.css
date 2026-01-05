@@ -4933,6 +4933,12 @@ div[style*="width:100%"] {
 .oc .announcement-card {
   background: transparent !important;
 }
+.oc .config-select {
+  --bg-white: transparent !important;
+}
+.progress_bar_bg {
+  background: transparent !important;
+}
 .oc .sub-card {
   background-color: var(--background-color) !important;
 }
