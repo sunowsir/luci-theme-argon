@@ -2775,7 +2775,8 @@ td > table > tbody > tr > td,
   border-radius: 0.25rem;
   white-space: nowrap;
   overflow-x: auto;
-  background-color: transparent !important;
+  background-color: var(--background-color) !important;
+  margin-top: 16px;
 }
 .cbi-tabmenu::-webkit-scrollbar {
   width: 1px;
