@@ -4747,3 +4747,19 @@ div[style*="width:100%"] {
     background-color: transparent !important;
     color: var(--dark) !important;
 }
+
+/* 针对 Dockerman 容器管理按钮的修复 */
+.td div:has(.cbi-button) {
+    display: flex !important;
+    flex-wrap: wrap;       /* 允许在空间不足时换行 */
+    gap: 4px;              /* 按钮之间的间距 */
+    align-items: center;   /* 垂直居中 */
+    justify-content: flex-start; /* 左对齐 */
+}
+
+/* 确保按钮不会撑开太大 */
+.td .cbi-button {
+    margin: 0 !important;
+    padding: 4px 8px !important;
+    min-width: unset !important;
+}
