@@ -53,7 +53,8 @@ return view.extend({
 		o.value('none', _('Built-in'));
 		o.value('bing', _('Bing'));
 		o.value('unsplash', _('Unsplash'));
-		o.value('wallhaven', _('Wallhaven'));
+		o.value('pexels', _('Pexels'));
+		o.value('picsum', _('Picsum'));
 		o.default = 'bing';
 		o.rmempty = false;
 

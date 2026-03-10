@@ -742,7 +742,7 @@ select[multiple="multiple"] {
   left: 0;
   height: 100vh;
   width: 100vw;
-  background: url(../img/blank.png) no-repeat center / cover;
+  background: url(/luci-static/argon/img/bg1.jpg) no-repeat center / cover;
   transition: all 0.5s ease;
 }
 .login-page .login-container {
