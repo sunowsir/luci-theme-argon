@@ -72,16 +72,18 @@
 	}
 
 	function selectBackground(themeDir) {
-		let bgUrl = "";
+		let bgUrl = media + "/img/bg1.jpg";
 		let backgroundType = "Image";
 		let mimeType = "";
 
 		if (fs.access("/etc/config/argon")) {
 			let online_wallpaper = cfg.get_first('argon', 'global', 'online_wallpaper') ?? (cfg.get_first('argon', 'global', 'bing_background') == '1' ? 'bing' : null);
 			if (online_wallpaper && online_wallpaper != "none") {
-				ubus.call("luci.argon_wallpaper", "get_url") ?? {};
-				bgUrl = media + "/img/bg.jpg";
-				return {bgUrl, backgroundType, mimeType};
+				const picurl = ubus.call("luci.argon_wallpaper", "get_url") ?? {};
+                if (picurl && picurl.url) {
+				    bgUrl = media + "/img/bg.jpg";
+				    return {bgUrl, backgroundType, mimeType};
+                }
 			}
 		}
 
