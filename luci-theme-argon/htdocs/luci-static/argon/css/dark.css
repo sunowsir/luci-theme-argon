@@ -26,19 +26,17 @@
  *
  *  Licensed to the public under the Apache License 2.0
  */
-:root {
-  --menu-bg-dark-color: rgba(0, 0, 0, var(--blur-opacity-dark));
-  --cbi-session-dark-color: rgba(0, 0, 0, var(--blur-opacity-dark));
-  --background-dark-color: rgba(0, 0, 0, var(--blur-opacity-dark));
-}
 body {
-  background-color: var(--background-dark-color);
+  background: #1e1e1e;
   color: #cccccc;
+}
+.spinning::before {
+  filter: invert(1);
 }
 .login-page .login-container .login-form {
   background-color: #1e1e1e;
-  -webkit-backdrop-filter: blur(var(--blur-radius-dark));
-  backdrop-filter: blur(var(--blur-radius-dark));
+  -webkit-backdrop-filter: blur(var(--blur-radius-dark)) brightness(0);
+  backdrop-filter: blur(var(--blur-radius-dark)) brightness(0);
   background-color: rgba(0, 0, 0, var(--blur-opacity-dark));
 }
 .login-page .login-container .login-form .brand {
@@ -69,7 +67,7 @@ header::after {
   background-color: #1e1e1e !important;
 }
 .main .main-left {
-  background-color: var(--menu-bg-dark-color) !important;
+  background-color: #333333 !important;
   box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.15);
 }
 .main .main-left .sidenav-header .brand {
@@ -110,22 +108,25 @@ header::after {
   color: #ffffff !important;
 }
 .main .main-left::-webkit-scrollbar-thumb {
-  background-color: var(--background-dark-color) !important;
+  background-color: #252526 !important;
 }
 .main .main-left::-webkit-scrollbar-track {
-  background-color: var(--background-dark-color) !important;
+  background-color: #333;
 }
 .main .main-right {
-  background-color: var(--menu-bg-dark-color) !important;
+  background-color: #1e1e1e;
 }
 h2 {
   color: #ccc;
-  background-color: var(--background-dark-color) !important;
+  /* patch: delete by sun.wang */
+  /* patch: add by sun.wang begin */
+  backdrop-filter: blur(var(--blur-radius));
+  /* patch: add by sun.wang end */
 }
 h3 {
   color: #ccc;
   border-bottom: 0;
-  background-color: var(--background-dark-color) !important;
+  /* patch: delete by sun.wang */
 }
 h4 {
   color: #8C6900;
@@ -157,7 +158,7 @@ input:-webkit-autofill {
   color: #ccc;
 }
 header.bg-primary {
-  background-color: var(--background-dark-color) !important;
+  background-color: #1e1e1e !important;
 }
 .cbi-map-descr {
   color: #ccc;
@@ -172,7 +173,7 @@ header.bg-primary {
 }
 div > table > tbody > tr:nth-of-type(2n),
 div > .table > .tr:nth-of-type(2n) {
-  background-color: transparent !important;
+  /* patch: delete by sun.wang */
 }
 table > tbody > tr > td,
 table > tfoot > tr > td,
@@ -219,6 +220,10 @@ table > thead > tr > th {
   background-color: #252526;
   border-bottom: black 1px solid !important;
 }
+.tr[data-title]::before,
+.tr.cbi-section-table-titles.named::before {
+  /* patch: delete by sun.wang */
+}
 tr > td,
 tr > th,
 .tr > .td,
@@ -228,10 +233,10 @@ tr > th,
   border-top: 0;
 }
 .cbi-rowstyle-2 {
-  background-color: #1e1e1e;
+  /* patch: delete by sun.wang */
 }
 .cbi-rowstyle-1 {
-  background-color: #252526;
+  /* patch: delete by sun.wang */
 }
 .cbi-rowstyle-2 .cbi-button-up,
 .cbi-rowstyle-2 .cbi-button-down,
@@ -253,12 +258,12 @@ h4 {
   background-color: var(--dark-primary) !important;
 }
 .cbi-section-table .cbi-section-table-titles .cbi-section-table-cell {
-  background-color: #1e1e1f;
+  /* patch: delete by sun.wang */
 }
 .cbi-button {
   color: #ffffff !important;
   background-color: #483d8b;
-  background-color: var(--background-dark-color);
+  background-color: var(--dark-primary);
 }
 .cbi-section-node {
   background: none;
@@ -275,7 +280,9 @@ div > .table > .tbody > .tr:nth-of-type(2n) {
 }
 #syslog {
   color: #ccc;
-  background-color: #1e1e1e;
+  /* patch: modify by sun.wang begin */
+  background-color: transparent;
+  /* patch: modify by sun.wang end */
 }
 #iwsvg,
 #iwsvg2,
@@ -285,7 +292,9 @@ div > .table > .tbody > .tr:nth-of-type(2n) {
   background-color: #1e1e1e !important;
 }
 .tabs {
-  background-color: var(--dark-primary);
+  /* patch: modify by sun.wang begin */
+  background-color: var(--background-color);
+  /* patch: modify by sun.wang end */
 }
 .tabs li[class~="active"],
 .tabs li:hover {
@@ -306,9 +315,6 @@ div > .table > .tbody > .tr:nth-of-type(2n) {
   color: var(--dark-primary) !important;
   background-color: #181819;
 }
-.cbi-tabmenu {
-  background: var(--background-dark-color) !important;
-}
 .cbi-tabmenu > li > a,
 .tabs > li > a {
   color: #ccc;
@@ -318,22 +324,22 @@ div > .table > .tbody > .tr:nth-of-type(2n) {
   color: #ccc;
 }
 .cbi-tabmenu > li {
-  background: var(--background-dark-color) !important;
+  background: #2d2d2d;
 }
 .cbi-tabmenu li[class~="cbi-tab"] a {
   color: #ccc;
 }
 .cbi-tabmenu > li:hover {
   color: #ccc;
-  background-color: var(--background-dark-color) !important;
+  background: #2d2d2d;
   border-bottom: 0.18751rem solid var(--dark-primary) !important;
 }
 .cbi-tabmenu > li[class~="cbi-tab"] {
-  background-color: var(--background-dark-color) !important;
+  background-color: #181819;
   border-bottom: 0.18751rem solid var(--dark-primary) !important;
 }
 .cbi-tabcontainer > .cbi-value:nth-of-type(2n) {
-  background-color: #252526;
+  /* patch: delete by sun.wang */
 }
 .cbi-value-title {
   color: #ccc;
@@ -380,21 +386,20 @@ select {
   color: #ccc;
 }
 .cbi-input-textarea {
-  background-color: #1e1e1e;
-  color: #ccc;
-  border: 1px solid #3c3c3c !important;
+  /* patch: modify by sun.wang begin */
+  background-color: transparent;
+  color: white;
+  border: 1px solid transparent !important;
+  /* patch: modify by sun.wang end */
 }
 textarea:focus-visible {
   border: 1px solid var(--dark-primary);
 }
 .cbi-section-remove:nth-of-type(2n),
 .cbi-section-node:nth-of-type(2n) {
-  background-color: var(--background-dark-color);
-}
-.cbi-section[id] .cbi-section-remove:nth-of-type(4n+3),
-.cbi-section[id] .cbi-section-node:nth-of-type(4n+4) {
   background-color: #1e1e1e;
 }
+/* patch: delete by sun.wang */
 .node-system-packages > .main table tr td:nth-last-child(1) {
   color: #ccc;
 }
@@ -408,10 +413,10 @@ textarea:focus-visible {
 }
 .ifacebox-head {
   color: #ccc;
-  background: #666;
+  /* patch: delete by sun.wang */
 }
 .ifacebox-body {
-  background-color: #333;
+  /* patch: delete by sun.wang */
 }
 .zonebadge strong {
   color: #333;
@@ -462,6 +467,10 @@ td.cbi-value-field var {
 .notice {
   background-color: #483d8b !important;
   background-color: var(--dark-primary) !important;
+}
+.cbi-section.fade-in .cbi-title > div:last-child span {
+  background: none!important;
+  color: #ced4da;
 }
 .cbi-input-find,
 .cbi-input-save,
@@ -520,11 +529,13 @@ header .fill .status span[data-style="active"] {
 [data-page="admin-network-diagnostics"] .tr > .td,
 .tr.table-titles > .th,
 .tr.cbi-section-table-titles > .th {
-  background-color: var(--background-dark-color) !important;
+  /* patch: delete by sun.wang */
   border-bottom: black 1px solid !important;
 }
 .network-status-table .ifacebox-body .ifacebadge {
-  background-color: #252526;
+  /* patch: modify by sun.wang begin */
+  background-color: var(--background-color);
+  /* patch: modify by sun.wang end */
   border-bottom: 0;
   box-shadow: none;
 }
@@ -619,10 +630,10 @@ td > .ifacebadge,
 [data-tab-title],
 [data-page^="admin-system-admin"]:not(.node-main-login) .cbi-map:not(#cbi-dropbear),
 [data-page="admin-system-opkg"] #maincontent > .container {
-  background-color: var(--background-dark-color) !important;
+  background: #1e1e1e !important;
   box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.35);
 }
-div[style="width:100%;height:300px;border:1px solid #000;background:#fff"] {
+div[style="width:100%;height:300px;"] {
   background: transparent !important;
 }
 [data-page="admin-system-admin"] .cbi-map h2,
@@ -663,7 +674,7 @@ input,
   color: #ccc;
 }
 .cbi-section-table-row {
-  background-color: #1e1e1e !important;
+  /* patch: delete by sun.wang */
 }
 .modal {
   background-color: #1e1e1e;
@@ -683,7 +694,7 @@ input,
   border-color: var(--dark-primary) !important;
 }
 .cbi-dropdown[open] > ul.dropdown {
-  background-color: var(--background-dark-color) !important;
+  background: #252526 !important;
   color: #ffffff !important;
   box-shadow: none;
   border: 1px solid #3c3c3c !important;
@@ -703,7 +714,7 @@ input,
   outline: none;
 }
 .ifacebadge {
-  background-color: #333333;
+  /* patch: delete by sun.wang */
 }
 .cbi-dynlist > .item > span {
   border: 1px solid #3c3c3c !important;
@@ -841,7 +852,7 @@ input,
   filter: invert(0.9);
 }
 [data-page="admin-network-diagnostics"] .cbi-section {
-  background: #252526 !important;
+  /* patch: delete by sun.wang */
 }
 [data-page="admin-network-diagnostics"] textarea {
   background: transparent;
@@ -850,7 +861,7 @@ input,
   border: 1px solid #3c3c3c !important;
 }
 [data-page="admin-network-diagnostics"] .tr > .td {
-  background-color: #252526 !important;
+  /* patch: delete by sun.wang */
 }
 [data-page="admin-network-network"] .ifacebox-head[style*="--zone-color-rgb: 144, 240, 144"] {
   background-color: #497e49 !important;

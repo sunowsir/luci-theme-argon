@@ -28,23 +28,22 @@
  *  Licensed to the public under the Apache License 2.0
  */
 
-:root {
-    --menu-bg-dark-color: rgba(0, 0, 0, var(--blur-opacity-dark));
-    --cbi-session-dark-color: rgba(0, 0, 0, var(--blur-opacity-dark));
-    --background-dark-color: rgba(0, 0, 0, var(--blur-opacity-dark));
-}
 
 body {
-    background-color: var(--background-dark-color);
+    background: #1e1e1e;
     color: #cccccc;
+}
+
+.spinning::before {
+    filter: invert(1);
 }
 
 .login-page .login-container {
 
     .login-form {
         background-color: #1e1e1e;
-        -webkit-backdrop-filter: blur(var(--blur-radius-dark));
-        backdrop-filter: blur(var(--blur-radius-dark));
+        -webkit-backdrop-filter: blur(var(--blur-radius-dark)) brightness(0);
+        backdrop-filter: blur(var(--blur-radius-dark)) brightness(0);
         background-color: rgba(0, 0, 0, var(--blur-opacity-dark));
 
         .brand {
@@ -92,7 +91,7 @@ header::after {
 .main {
     .main-left {
 
-        background-color: var(--menu-bg-dark-color) !important;
+        background-color: #333333 !important;
         box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, .15);
 
         .sidenav-header .brand {
@@ -158,28 +157,31 @@ header::after {
 
 
         &::-webkit-scrollbar-thumb {
-            background-color: var(--background-dark-color) !important;
+            background-color: #252526 !important;
         }
 
         &::-webkit-scrollbar-track {
-            background-color: var(--background-dark-color) !important;
+            background-color: #333;
         }
     }
 
     .main-right {
-        background-color: var(--menu-bg-dark-color) !important;
+        background-color: #1e1e1e;
     }
 }
 
 h2 {
     color: #ccc;
-    background-color: var(--background-dark-color) !important;
+    /* patch: delete by sun.wang */
+    /* patch: add by sun.wang begin */
+    backdrop-filter: blur(var(--blur-radius));
+    /* patch: add by sun.wang end */
 }
 
 h3 {
     color: #ccc;
     border-bottom: 0;
-    background-color: var(--background-dark-color) !important;
+    /* patch: delete by sun.wang */
 }
 
 h4 {
@@ -190,9 +192,7 @@ abbr {
     color: var(--dark-primary) !important;
 }
 
-a:link,
-a:visited,
-a:active {
+a:link, a:visited, a:active {
     color: #a5b2ff;
 }
 
@@ -221,7 +221,7 @@ input:-webkit-autofill {
 }
 
 header.bg-primary {
-    background-color: var(--background-dark-color) !important;
+    background-color: #1e1e1e !important;
 }
 
 .cbi-map-descr {
@@ -238,46 +238,46 @@ header.bg-primary {
     background-color: #333333;
 }
 
-div>table>tbody>tr:nth-of-type(2n),
-div>.table>.tr:nth-of-type(2n) {
-    background-color: transparent !important;
+div > table > tbody > tr:nth-of-type(2n),
+div > .table > .tr:nth-of-type(2n) {
+    /* patch: delete by sun.wang */
 }
 
-table>tbody>tr>td,
-table>tfoot>tr>td,
-table>thead>tr>td {
+table > tbody > tr > td,
+table > tfoot > tr > td,
+table > thead > tr > td {
     color: #cccccc;
 }
 
-fieldset>table>tbody>tr:nth-of-type(2n) {
+fieldset > table > tbody > tr:nth-of-type(2n) {
     background-color: #252526;
 }
 
-table>tbody>tr>td,
-table>tfoot>tr>td,
-table>thead>tr>td {
+table > tbody > tr > td,
+table > tfoot > tr > td,
+table > thead > tr > td {
     border-top: 1px solid #252526;
 }
 
-#swaptotal>div>div,
-#swapfree>div>div,
-#memfree>div>div,
-#membuff>div>div,
-#conns>div>div,
-#memtotal>div>div {
+#swaptotal > div > div,
+#swapfree > div > div,
+#memfree > div > div,
+#membuff > div > div,
+#conns > div > div,
+#memtotal > div > div {
     background-color: var(--dark-primary) !important;
 }
 
-#swaptotal>div>div>div>small,
-#swapfree>div>div>div>small,
-#memfree>div>div>div>small,
-#membuff>div>div>div>small,
-#conns>div>div>div>small,
-#memtotal>div>div>div>small {
+#swaptotal > div > div > div > small,
+#swapfree > div > div > div > small,
+#memfree > div > div > div > small,
+#membuff > div > div > div > small,
+#conns > div > div > div > small,
+#memtotal > div > div > div > small {
     color: #ccc !important;
 }
 
-.node-system-packages>.main .cbi-section-node:first-child .cbi-value-last {
+.node-system-packages > .main .cbi-section-node:first-child .cbi-value-last {
     line-height: 1.8em;
 
     div[style="margin:3px 0; width:300px; height:10px; border:1px solid #000000; background-color:#80C080"] {
@@ -291,28 +291,33 @@ table>thead>tr>td {
 
 }
 
-table>tbody>tr>th,
-table>tfoot>tr>th,
-table>thead>tr>th {
+table > tbody > tr > th,
+table > tfoot > tr > th,
+table > thead > tr > th {
     background-color: #252526;
     border-bottom: black 1px solid !important;
 }
 
-tr>td,
-tr>th,
-.tr>.td,
-.tr>.th,
+.tr[data-title]::before,
+.tr.cbi-section-table-titles.named::before {
+  /* patch: delete by sun.wang */
+}
+
+tr > td,
+tr > th,
+.tr > .td,
+.tr > .th,
 .cbi-section-table-row::before,
-#cbi-wireless>#wifi_assoclist_table>.tr:nth-child(2) {
+#cbi-wireless > #wifi_assoclist_table > .tr:nth-child(2) {
     border-top: 0;
 }
 
 .cbi-rowstyle-2 {
-    background-color: #1e1e1e;
+    /* patch: delete by sun.wang */
 }
 
 .cbi-rowstyle-1 {
-    background-color: #252526;
+    /* patch: delete by sun.wang */
 }
 
 .cbi-rowstyle-2 .cbi-button-up,
@@ -321,7 +326,7 @@ body:not(.Interfaces) .cbi-rowstyle-2:first-child {
     background-color: rgb(102, 102, 102) !important;
 }
 
-.cbi-section>h3:first-child,
+.cbi-section > h3:first-child,
 .panel-title,
 h3 {
     color: #ccc;
@@ -340,13 +345,13 @@ h4 {
 }
 
 .cbi-section-table .cbi-section-table-titles .cbi-section-table-cell {
-    background-color: #1e1e1f;
+    /* patch: delete by sun.wang */
 }
 
 .cbi-button {
     color: #ffffff !important;
     background-color: #483d8b;
-    background-color: var(--background-dark-color);
+    background-color: var(--dark-primary);
 }
 
 .cbi-section-node {
@@ -357,8 +362,8 @@ abbr {
     color: #5e72e4;
 }
 
-div>table>tbody>tr:nth-of-type(2n),
-div>.table>.tbody>.tr:nth-of-type(2n) {
+div > table > tbody > tr:nth-of-type(2n),
+div > .table > .tbody > .tr:nth-of-type(2n) {
     background-color: #252526;
 }
 
@@ -368,7 +373,9 @@ div>.table>.tbody>.tr:nth-of-type(2n) {
 
 #syslog {
     color: #ccc;
-    background-color: #1e1e1e;
+    /* patch: modify by sun.wang begin */
+    background-color: transparent;
+    /* patch: modify by sun.wang end */
 }
 
 #iwsvg,
@@ -380,7 +387,9 @@ div>.table>.tbody>.tr:nth-of-type(2n) {
 }
 
 .tabs {
-    background-color: var(--dark-primary);
+    /* patch: modify by sun.wang begin */
+    background-color: var(--background-color);
+    /* patch: modify by sun.wang end */
 
     li[class~="active"],
     li:hover {
@@ -393,24 +402,20 @@ div>.table>.tbody>.tr:nth-of-type(2n) {
     }
 }
 
-.tabs>li[class~="active"]>a {
+.tabs > li[class~="active"] > a {
     color: #ccc;
 }
 
-.tabs>li[class~="active"],
-.tabs>li:hover {
+.tabs > li[class~="active"],
+.tabs > li:hover {
     border-bottom: 0.18751rem solid #483d8b;
     border-bottom: 0.18751rem solid var(--dark-primary);
     color: var(--dark-primary) !important;
     background-color: #181819;
 }
 
-.cbi-tabmenu {
-    background: var(--background-dark-color) !important;
-}
-
-.cbi-tabmenu>li>a,
-.tabs>li>a {
+.cbi-tabmenu > li > a,
+.tabs > li > a {
     color: #ccc;
 
     &:hover {
@@ -418,27 +423,27 @@ div>.table>.tbody>.tr:nth-of-type(2n) {
     }
 }
 
-.cbi-tabmenu>li {
-    background: var(--background-dark-color) !important;
+.cbi-tabmenu > li {
+    background: #2d2d2d;
 }
 
 .cbi-tabmenu li[class~="cbi-tab"] a {
     color: #ccc;
 }
 
-.cbi-tabmenu>li:hover {
+.cbi-tabmenu > li:hover {
     color: #ccc;
-    background-color: var(--background-dark-color) !important;
+    background: #2d2d2d;
     border-bottom: 0.18751rem solid var(--dark-primary) !important;
 }
 
-.cbi-tabmenu>li[class~="cbi-tab"] {
-    background-color: var(--background-dark-color) !important;
+.cbi-tabmenu > li[class~="cbi-tab"] {
+    background-color: #181819;
     border-bottom: 0.18751rem solid var(--dark-primary) !important;
 }
 
-.cbi-tabcontainer>.cbi-value:nth-of-type(2n) {
-    background-color: #252526;
+.cbi-tabcontainer > .cbi-value:nth-of-type(2n) {
+    /* patch: delete by sun.wang */
 }
 
 .cbi-value-title {
@@ -487,7 +492,7 @@ select {
     color: #ccc !important;
 }
 
-.cbi-value-field>ul>li .ifacebadge {
+.cbi-value-field > ul > li .ifacebadge {
     background-color: #3c3c3c;
 }
 
@@ -496,9 +501,11 @@ select {
 }
 
 .cbi-input-textarea {
-    background-color: #1e1e1e;
-    color: #ccc;
-    border: 1px solid #3c3c3c !important;
+    /* patch: modify by sun.wang begin */
+    background-color: transparent;
+    color: white;
+    border: 1px solid transparent !important;
+    /* patch: modify by sun.wang end */
 }
 
 textarea {
@@ -510,15 +517,12 @@ textarea {
 
 .cbi-section-remove:nth-of-type(2n),
 .cbi-section-node:nth-of-type(2n) {
-    background-color: var(--background-dark-color);
-}
-
-.cbi-section[id] .cbi-section-remove:nth-of-type(4n+3),
-.cbi-section[id] .cbi-section-node:nth-of-type(4n+4) {
     background-color: #1e1e1e;
 }
 
-.node-system-packages>.main table tr td:nth-last-child(1) {
+/* patch: delete by sun.wang */
+
+.node-system-packages > .main table tr td:nth-last-child(1) {
     color: #ccc;
 
 }
@@ -535,18 +539,18 @@ textarea {
 
 .ifacebox-head {
     color: #ccc;
-    background: #666;
+    /* patch: delete by sun.wang */
 }
 
 .ifacebox-body {
-    background-color: #333;
+    /* patch: delete by sun.wang */
 }
 
 .zonebadge strong {
     color: #333;
 }
 
-.zonebadge>.ifacebadge {
+.zonebadge > .ifacebadge {
     background-color: #3c3c3c;
 }
 
@@ -555,7 +559,7 @@ td.cbi-value-field var {
     color: #5e72e4;
 }
 
-#diag-rc-output>pre {
+#diag-rc-output > pre {
     color: #ccc;
     background-color: #1e1e1e;
 }
@@ -596,7 +600,7 @@ td.cbi-value-field var {
     border-right: #1e1e1e 1px solid;
 }
 
-#xhr_poll_status>.label.success {
+#xhr_poll_status > .label.success {
     color: #ccc !important;
 
     background-color: darkolivegreen !important;
@@ -605,6 +609,11 @@ td.cbi-value-field var {
 .notice {
     background-color: #483d8b !important;
     background-color: var(--dark-primary) !important;
+}
+
+.cbi-section.fade-in .cbi-title>div:last-child span {
+  background: none!important;
+  color: #ced4da;
 }
 
 .cbi-input-find,
@@ -652,7 +661,7 @@ fieldset[id^="cbi-apply-"] {
     background-color: #333333;
 }
 
-#detail-bubble>div {
+#detail-bubble > div {
     border: 1px solid #ccc;
     background: #252525;
 }
@@ -667,32 +676,33 @@ header .fill .status span[data-style="active"] {
 }
 
 #cbi-wireless .td,
-#cbi-network .tr:first-child>.td,
-.table[width="100%"]>.tr:first-child>.td,
-[data-page="admin-network-diagnostics"] .tr>.td,
-.tr.table-titles>.th,
-.tr.cbi-section-table-titles>.th {
-    background-color: var(--background-dark-color) !important;
+#cbi-network .tr:first-child > .td,
+.table[width="100%"] > .tr:first-child > .td,
+[data-page="admin-network-diagnostics"] .tr > .td,
+.tr.table-titles > .th,
+.tr.cbi-section-table-titles > .th {
+    /* patch: delete by sun.wang */
     border-bottom: black 1px solid !important;
 
 }
 
 .network-status-table .ifacebox-body .ifacebadge {
-    background-color: #252526;
+    /* patch: modify by sun.wang begin */
+    background-color: var(--background-color);
+    /* patch: modify by sun.wang end */
     border-bottom: 0;
     box-shadow: none;
 }
 
-td>.ifacebadge,
-.td>.ifacebadge {
+td > .ifacebadge,
+.td > .ifacebadge {
     color: #fff;
     background-color: #483d8b;
     background-color: var(--dark-primary);
     border: 0;
 }
 
-.alert,
-.alert-message {
+.alert, .alert-message {
     background-color: #333;
 }
 
@@ -700,13 +710,11 @@ td>.ifacebadge,
     background-color: #986400 !important;
 }
 
-.alert.error,
-.alert-message.error {
+.alert.error, .alert-message.error {
     background-color: #784f00;
 }
 
-.alert h4,
-.alert-message h4 {
+.alert h4, .alert-message h4 {
     background-color: #784f00;
     color: #ffbf00;
 }
@@ -723,17 +731,17 @@ td>.ifacebadge,
 
             .uci-change-legend-label {
 
-                >ins {
+                > ins {
                     border-color: #00ad00;
                     background-color: #688668;
                 }
 
-                >del {
+                > del {
                     border-color: #c60000;
                     background-color: #896565;
                 }
 
-                >var {
+                > var {
                     background-color: #333;
                     border-color: #666;
 
@@ -749,7 +757,7 @@ td>.ifacebadge,
         }
 
         .uci-change-list {
-            >var {
+            > var {
                 background-color: #333;
                 border-color: #666;
 
@@ -762,18 +770,18 @@ td>.ifacebadge,
                 }
             }
 
-            >ins {
+            > ins {
                 border-color: #00ad00;
                 background-color: #688668;
             }
 
-            >del {
+            > del {
                 border-color: #c60000;
                 background-color: #896565;
             }
         }
 
-        .uci-change-list+.right {
+        .uci-change-list + .right {
             .btn {
                 color: #ccc;
             }
@@ -786,7 +794,7 @@ td>.ifacebadge,
 }
 
 .btn.danger,
-.cbi-section-remove>.cbi-button,
+.cbi-section-remove > .cbi-button,
 .cbi-button-remove,
 .cbi-button-reset,
 .cbi-button-negative,
@@ -802,17 +810,17 @@ td>.ifacebadge,
 .cbi-section-error,
 #iptables,
 .Firewall form,
-#cbi-network>.cbi-section-node,
-#cbi-wireless>.cbi-section-node,
-#cbi-wireless>#wifi_assoclist_table,
+#cbi-network > .cbi-section-node,
+#cbi-wireless > .cbi-section-node,
+#cbi-wireless > #wifi_assoclist_table,
 [data-tab-title],
 [data-page^="admin-system-admin"]:not(.node-main-login) .cbi-map:not(#cbi-dropbear),
-[data-page="admin-system-opkg"] #maincontent>.container {
-    background-color: var(--background-dark-color) !important;
+[data-page="admin-system-opkg"] #maincontent > .container {
+    background: #1e1e1e !important;
     box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.35);
 }
 
-div[style="width:100%;height:300px;border:1px solid #000;background:#fff"] {
+div[style="width:100%;height:300px;"] {
     background: transparent !important;
 }
 
@@ -825,7 +833,7 @@ div[style="width:100%;height:300px;border:1px solid #000;background:#fff"] {
 
 [data-page="admin-system-flash"] {
     .modal {
-        label>input[type="checkbox"] {
+        label > input[type="checkbox"] {
             vertical-align: text-top;
             top: auto;
             border-color: #fff !important;
@@ -847,7 +855,7 @@ div[style="width:100%;height:300px;border:1px solid #000;background:#fff"] {
     }
 }
 
-.cbi-value input[type="password"]+.cbi-button-neutral {
+.cbi-value input[type="password"] + .cbi-button-neutral {
     background-color: #483d8b !important;
     background-color: var(--dark-primary) !important;
     border-color: var(--dark-primary) !important;
@@ -867,7 +875,7 @@ input,
 }
 
 .cbi-section-table-row {
-    background-color: #1e1e1e !important;
+    /* patch: delete by sun.wang */
 }
 
 .modal {
@@ -892,8 +900,8 @@ input,
     border-color: var(--dark-primary) !important;
 }
 
-.cbi-dropdown[open]>ul.dropdown {
-    background-color: var(--background-dark-color) !important;
+.cbi-dropdown[open] > ul.dropdown {
+    background: #252526 !important;
     color: #ffffff !important;
     box-shadow: none;
     border: 1px solid #3c3c3c !important;
@@ -901,28 +909,28 @@ input,
 
 }
 
-.cbi-dropdown[open]>ul.dropdown li {
+.cbi-dropdown[open] > ul.dropdown li {
     color: #ffffff;
     border-bottom: 1px solid #3c3c3c !important;
 }
 
-.cbi-dropdown[open]>ul.dropdown>li[selected] {
+.cbi-dropdown[open] > ul.dropdown > li[selected] {
     background-color: #483d8b !important;
     background-color: var(--dark-primary) !important;
     border-bottom: 1px solid #3c3c3c !important;
 }
 
-.cbi-dropdown[open]>ul.dropdown>li.focus {
+.cbi-dropdown[open] > ul.dropdown > li.focus {
     background: #483d8b;
     background: var(--dark-primary);
     outline: none;
 }
 
 .ifacebadge {
-    background-color: #333333;
+    /* patch: delete by sun.wang */
 }
 
-.cbi-dynlist>.item>span {
+.cbi-dynlist > .item > span {
     border: 1px solid #3c3c3c !important;
 }
 
@@ -943,7 +951,7 @@ input,
 
 .btn.primary,
 .cbi-page-actions .cbi-button-save,
-.cbi-page-actions .cbi-button-apply+.cbi-button-save,
+.cbi-page-actions .cbi-button-apply + .cbi-button-save,
 .cbi-button-add,
 .cbi-button-save,
 .cbi-button-positive,
@@ -976,7 +984,7 @@ input,
     background-color: transparent;
 }
 
-#view>.spinning {
+#view > .spinning {
     background: #333333 !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03) !important;
 }
@@ -998,7 +1006,7 @@ input,
 
 
 @media screen and (max-width: 480px) {
-    .node-status-iptables>.main div>.cbi-map>form {
+    .node-status-iptables > .main div > .cbi-map > form {
         background-color: #1e1e1e;
         box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, .35);
     }
@@ -1008,7 +1016,7 @@ input,
 
 [data-page=""],
 [data-page="admin-dashboard"] {
-    .main-right>#maincontent {
+    .main-right > #maincontent {
         .Dashboard {
             color: #ccc !important;
 
@@ -1071,7 +1079,7 @@ input,
         }
     }
 
-    .config-upload-content {
+    .config-upload-content{
         background: #1e1e1e !important;
     }
 
@@ -1087,8 +1095,8 @@ input,
         border-color: #3c3c3c;
     }
 
-    #diag-rc-output>pre,
-    #dns-rc-output>pre {
+    #diag-rc-output > pre,
+    #dns-rc-output > pre {
         color: #ccc;
         border: 1px solid #3c3c3c !important;
         background-color: #1e1e1e;
@@ -1103,7 +1111,7 @@ input,
 
 [data-page="admin-network-diagnostics"] {
     .cbi-section {
-        background: #252526 !important;
+        /* patch: delete by sun.wang */
     }
 
     textarea {
@@ -1113,8 +1121,8 @@ input,
         border: 1px solid #3c3c3c !important;
     }
 
-    .tr>.td {
-        background-color: #252526 !important;
+    .tr > .td {
+        /* patch: delete by sun.wang */
     }
 }
 
@@ -1133,7 +1141,7 @@ input,
         background-color: #666 !important;
     }
 
-    #modal_overlay>.modal.cbi-modal>div>p>textarea {
+    #modal_overlay > .modal.cbi-modal > div > p > textarea {
         border: 1px solid #3c3c3c !important;
         background-color: transparent !important;
     }
@@ -1143,8 +1151,8 @@ input,
         background-color: transparent !important;
     }
 
-    #modal_overlay>.modal.cbi-modal>div>p>textarea {
-        color: #ccc !important;
+    #modal_overlay > .modal.cbi-modal > div > p > textarea {
+        color: #ccc!important;
     }
 }
 
@@ -1166,7 +1174,7 @@ input,
             }
         }
 
-        >table>.cbi-section-table-row[data-title]::before {
+        > table > .cbi-section-table-row[data-title]::before {
             background-color: #252526 !important;
         }
     }
@@ -1199,7 +1207,7 @@ input,
             strong {
                 color: #ccc !important;
 
-                +span {
+                + span {
                     color: #ccc !important;
                 }
             }
@@ -1212,7 +1220,7 @@ input,
     .commandbox {
         border-bottom: thin solid #333;
         background: #252526;
-        box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.2), 0 1px 2px rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 1px 0 rgba(0,0,0,0.2),0 1px 2px rgba(255,255,255,0.05);
     }
 }
 
