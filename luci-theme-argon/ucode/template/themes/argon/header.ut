@@ -21,8 +21,11 @@
 	import { cursor } from 'uci';
 	import { srand } from 'math';
 	import { getuid, getspnam } from 'luci.core';
+
+    /* patch: add by sun.wang begin */
 	import * as fs from 'fs';
 	import { rand } from 'math';
+    /* patch: add by sun.wang end */
 
 	const boardinfo = ubus.call("system", "board");
 	const hostname = striptags(boardinfo?.hostname ?? '?');
@@ -50,6 +53,8 @@
 		bar_color = (mode == 'dark') ? dark_primary : primary;
 	}
 
+
+    /* patch: add by sun.wang begin */
 
 	//Fetch Local Background Media
 
@@ -104,6 +109,8 @@
 	const hostname = striptags(boardinfo?.hostname ?? '?');
 	const themeDir = media + "/background/";
 	const bgArry = selectBackground(themeDir);
+
+    /* patch: add by sun.wang end */
 
 -%}
 
@@ -166,7 +173,19 @@
 			--blur-opacity:{{ blur_opacity }};
 			--blur-radius-dark:{{ blur_radius_dark }}px;
 			--blur-opacity-dark:{{ blur_opacity_dark }};
+            /* patch: add by sun.wang begin */
+            --current-bg: url({{ bgArry.bgUrl }});
+            /* patch: add by sun.wang end */
 		}
+        /* patch: add by sun.wang begin */
+        .main {
+            background-color: {{ mode == 'dark' ? '#1a1a1a' : '#2d3436' }} !important;
+            background-image: var(--current-bg) !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+        }
+        /* patch: add by sun.wang end */
 		{% endif -%}
 	</style>
 	<!-- Stylesheets -->
@@ -187,6 +206,7 @@
 	class="lang_{{ dispatcher.lang }} {{ node?.title ? ` - ${striptags(node.title)}` : '' }} {% if (ctx.authsession): %}logged-in{% endif %}"
 	data-page="{{ entityencode(join('-', ctx.request_path), true) }}">
 
+    <!-- patch: add/modify by sun.wang start -->
 	{% if ( bgArry.backgroundType == "Video" ): %}
 	<div class="video">
 		<video autoplay loop muted id="video">
@@ -209,6 +229,7 @@
 	{% else %}
 	<div class="main" style="background-image:url({{ bgArry.bgUrl }})"> 
 	{% endif %}
+    <!-- patch: add/modify by sun.wang end -->
 		<div class="main-left" id="mainmenu" style="display:none">
 			<div class="sidenav-header d-flex align-items-center">
 				<a class="brand" href="#">{{ hostname }}</a>

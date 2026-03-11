@@ -1,9 +1,11 @@
 #!/bin/bash
 # author jjm2473
-# modify author sun.wang fork to https://github.com/sunowsir/luci-theme-argon
 
 . /lib/functions.sh
 . /usr/share/libubox/jshn.sh
+
+# patch: modify by sun.wang begin
+# modify author sun.wang fork to https://github.com/sunowsir/luci-theme-argon
 
 G_WEB_PIC_SRC=$(uci -q get argon.@global[0].online_wallpaper || echo 'bing')
 G_API_KEY=$(uci -q get argon.@global[0].use_api_key)
@@ -248,3 +250,4 @@ main "${@}"
 exit $?
 
 
+# patch: modify by sun.wang end

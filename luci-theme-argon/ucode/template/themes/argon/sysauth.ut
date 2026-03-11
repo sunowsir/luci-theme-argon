@@ -49,6 +49,7 @@
 		return backgroundTable;
 	}
 
+    /* patch: modify by sun.wang begin */
 	function selectBackground(themeDir) {
 		let bgUrl = media + "/img/bg1.jpg";
 		let backgroundType = "Image";
@@ -77,6 +78,7 @@
 
 		return {bgUrl, backgroundType, mimeType};
 	}
+    /* patch: modify by sun.wang end */
 
 	const boardinfo = ubus.call("system", "board");
 	const hostname = striptags(boardinfo?.hostname ?? '?');
