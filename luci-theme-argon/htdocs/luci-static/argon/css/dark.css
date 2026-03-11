@@ -121,6 +121,7 @@ h2 {
   /* patch: delete by sun.wang */
   /* patch: add by sun.wang begin */
   backdrop-filter: blur(var(--blur-radius));
+  margin: 0rem 0rem 1rem 0rem;
   /* patch: add by sun.wang end */
 }
 h3 {

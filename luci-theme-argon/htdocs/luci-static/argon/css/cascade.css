@@ -146,6 +146,7 @@ h2 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
   /* patch: add by sun.wang begin */
   backdrop-filter: blur(var(--blur-radius));
+  margin: 0rem 0rem 1rem 0rem;
   /* patch: add by sun.wang end */
 }
 h3 {
