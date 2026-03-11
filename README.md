@@ -1,5 +1,6 @@
 # luci-theme-argon
 > 尊重开源，尊重原作，forked from jerrykuku/luci-theme-argon
+* 适配版本：25.12 主线版本
 * 跟原版相比：
     1. 将管理界面的白色背景改为图片，与登录页背景一致
     2. 调整部分样式，使其在半透明背景下更和谐
