@@ -2840,7 +2840,7 @@ td > .ifacebadge,
   font-family: inherit;
   width: 100%;
   font-size: 0.875rem;
-  min-height: 14rem;
+  /* patch: delete by sun.wang */
   padding: 0.8rem;
   /* patch: modify by sun.wang begin */
   color: black;
