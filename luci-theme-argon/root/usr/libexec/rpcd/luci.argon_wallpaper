@@ -202,8 +202,6 @@ function work() {
         return 127
     fi
 
-    sleep 20
-
     get_url
 
     # 获取URL成功，写入URL到running cache 文件中, 并下载图片, 提高web响应速度
