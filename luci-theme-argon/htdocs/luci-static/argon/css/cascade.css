@@ -1871,10 +1871,10 @@ td > table > tbody > tr > td,
 .cbi-button-neutral[value="Restart"] {
   font-weight: normal;
   color: #fff;
-  border: thin solid #f5365c;
+  /* patch: modify by sun.wang begin */
   border: thin solid var(--red);
-  background-color: #f5365c;
-  background-color: var(--red);
+  background-color: var(--red) !important;
+  /* patch: modify by sun.wang end */
 }
 /* yellow */
 .btn[value="Dismiss"],
