@@ -682,7 +682,7 @@ input,
   box-shadow: none;
   transition: box-shadow 0.15s ease;
   /* patch: add by sun.wang begin */
-  background-color: transparent;
+  background-color: transparent !important;
   /* patch: add by sun.wang end */
 }
 select {
@@ -1837,10 +1837,10 @@ td > table > tbody > tr > td,
 .cbi-button-neutral[onclick="handleConfig(event)"] {
   font-weight: normal;
   color: #fff !important;
-  border: thin solid #5e72e4;
   border: thin solid var(--primary);
-  background-color: #5e72e4;
-  background-color: var(--primary);
+  /* patch: modify by sun.wang begin */
+  background-color: var(--primary) !important;
+  /* patch: modify by sun.wang end */
 }
 /* light blue */
 .cbi-page-actions .cbi-button-apply,
@@ -1857,8 +1857,7 @@ td > table > tbody > tr > td,
   color: #fff !important;
   border: thin solid #5e72e4;
   border: thin solid var(--primary);
-  background-color: #5e72e4;
-  background-color: var(--primary);
+  background-color: var(--primary) !important;
 }
 /* red */
 .btn.danger,
@@ -3861,6 +3860,9 @@ pre.command-output {
 [data-page^="admin-services-openclash"] [id="container.openclash.config.debug"] fieldset {
   border: none !important;
   padding: 1rem !important;
+  /* patch: add by sun.wang begin */
+  background-color: transparent !important;
+  /* patch: add by sun.wang end */
 }
 [data-page^="admin-services-openclash"] #diag-rc-output > pre,
 [data-page^="admin-services-openclash"] #dns-rc-output > pre {
