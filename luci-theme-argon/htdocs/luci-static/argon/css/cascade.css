@@ -1821,7 +1821,9 @@ td > table > tbody > tr > td,
 .cbi-button[onclick="hide_empty(this)"] {
   color: #fff;
   border: thin solid #8898aa;
-  background-color: #8898aa;
+  /* patch: modify by sun.wang begin */
+  background-color: #8898aa !important;
+  /* patch: modify by sun.wang end */
 }
 /* dark blue */
 .btn.primary,
