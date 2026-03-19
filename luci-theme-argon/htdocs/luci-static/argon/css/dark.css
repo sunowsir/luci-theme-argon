@@ -253,7 +253,7 @@ h4 {
   background-color: #1e1e1f;
 }
 .cbi-progressbar {
-  background: #282a2c;
+  /* patch: delete by sun.wang */
 }
 .cbi-progressbar div {
   background-color: var(--dark-primary) !important;
