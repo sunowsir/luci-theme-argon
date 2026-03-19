@@ -3886,7 +3886,7 @@ pre.command-output {
 [data-page^="admin-services-openclash"] .cbi-button-up,
 [data-page^="admin-services-openclash"] .cbi-button-down {
   padding: 0.8rem 1.5rem;
-  background-color: #f1f1f1;
+  background-color: #f1f1f1 !important;
   font-size: 0;
 }
 [data-page^="admin-services-openclash"] select#CORE_VERSION,
