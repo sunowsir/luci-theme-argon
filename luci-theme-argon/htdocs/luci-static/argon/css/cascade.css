@@ -1953,13 +1953,15 @@ td > table > tbody > tr > td,
   margin-bottom: 0;
   border-radius: 0;
   /* patch: add by sun.wang begin */
-  padding: 0.875rem 0rem;
   /* patch: add by sun.wang end */
 }
 .tabs li[class~="active"] a,
 .tabs li:hover a {
   color: #5e72e4;
   color: var(--primary);
+}
+.tabs li#tool_label.tool_label {
+  padding: 0rem !important;
 }
 .tabs li {
   font-size: 0.875rem;
