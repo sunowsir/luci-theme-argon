@@ -1968,6 +1968,9 @@ td > table > tbody > tr > td,
   border-bottom: 0.18751rem solid rgba(0, 0, 0, 0);
   margin: 0;
   transition: all 0.2s;
+  /* patch: add by sun.wang begin */
+  padding: 0.875rem 0rem;
+  /* patch: add by sun.wang end */
 }
 .tabs li a {
   text-decoration: none;
